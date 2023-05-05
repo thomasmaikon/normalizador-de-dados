@@ -1,6 +1,7 @@
 package setup
 
 import (
+	"hubla/desafiofullstack/controllers"
 	"hubla/desafiofullstack/models"
 
 	"github.com/gin-gonic/gin"
@@ -8,15 +9,18 @@ import (
 )
 
 type appEngine struct {
-	router *gin.Engine
+	Router *gin.Engine
 }
 
 func NewAppEngine() *appEngine {
-	router := gin.Default()
-	return &appEngine{router}
+	Router := gin.Default()
+	return &appEngine{Router}
 }
 
 func (app *appEngine) InitializeRoutes() *appEngine {
+
+	app.Router.POST("/user", controllers.CreateUser)
+
 	return app
 }
 
@@ -35,6 +39,6 @@ func (app *appEngine) RunMigrations(db *gorm.DB) *appEngine {
 }
 
 func (app *appEngine) Run(port string) *appEngine {
-	app.router.Run(port)
+	app.Router.Run(port)
 	return app
 }
