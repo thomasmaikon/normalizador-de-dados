@@ -5,9 +5,5 @@ type User struct {
 	Name string `gorm: "not null"`
 
 	LoginID int
-	Login   Login `gorm: "constraint:OnUpdate:CASCADE"`
-}
-
-func (user User) TableName() string {
-	return "user"
+	Login   Login `gorm: "foreignKey; constraint:OnUpdate:CASCADE"`
 }
