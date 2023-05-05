@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -42,7 +41,7 @@ func readEnvironments(file string) (string, string, string, string, string) {
 
 	err := godotenv.Load("config.env")
 	if err != nil {
-		log.Panic("Env File doesnot Find")
+		panic("Env File doesnot Find")
 	}
 
 	host := os.Getenv("host")
