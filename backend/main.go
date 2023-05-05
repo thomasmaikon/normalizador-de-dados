@@ -11,7 +11,7 @@ func main() {
 
 	setup.NewAppEngine().
 		InitializeRoutes().
-		RunMigrations().
+		RunMigrations(db).
 		Run(":8080")
 
 }
