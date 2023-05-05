@@ -1,6 +1,11 @@
 package setup
 
-import "github.com/gin-gonic/gin"
+import (
+	"hubla/desafiofullstack/models"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
 
 type appEngine struct {
 	router *gin.Engine
@@ -15,7 +20,17 @@ func (app *appEngine) InitializeRoutes() *appEngine {
 	return app
 }
 
-func (app *appEngine) RunMigrations() *appEngine {
+func (app *appEngine) RunMigrations(db *gorm.DB) *appEngine {
+	err := db.AutoMigrate(&models.Login{})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = db.AutoMigrate(&models.User{})
+	if err != nil {
+		panic(err.Error())
+	}
+
 	return app
 }
 
