@@ -53,6 +53,7 @@ func TestSimpleRequestForCreateUser(t *testing.T) {
 		Post("/signup").
 		JSON(inputData).
 		Expect(t).
+		HeaderPresent("Authorization").
 		Status(http.StatusCreated).
 		End()
 }
@@ -61,7 +62,7 @@ func TestSimpleRequestForCreateUserthatAlredyExist(t *testing.T) {
 	inputData := dtos.CreateUseDTO{
 		Name: "test",
 		Login: dtos.LoginDTO{
-			Email:    "simple-Email",
+			Email:    "simple-Email2",
 			Password: "test",
 		},
 	}
@@ -71,6 +72,7 @@ func TestSimpleRequestForCreateUserthatAlredyExist(t *testing.T) {
 		Post("/signup").
 		JSON(inputData).
 		Expect(t).
+		HeaderPresent("Authorization").
 		Status(http.StatusCreated).
 		End()
 
@@ -79,6 +81,7 @@ func TestSimpleRequestForCreateUserthatAlredyExist(t *testing.T) {
 		Post("/signup").
 		JSON(inputData).
 		Expect(t).
+		HeaderNotPresent("Authorization").
 		Status(http.StatusConflict).
 		End()
 }
@@ -99,6 +102,7 @@ func TestCreateAccoutAndSignIn(t *testing.T) {
 		Post("/signup").
 		JSON(inputData).
 		Expect(t).
+		HeaderPresent("Authorization").
 		Status(http.StatusCreated).
 		End()
 
@@ -107,7 +111,7 @@ func TestCreateAccoutAndSignIn(t *testing.T) {
 		Post("/signin").
 		JSON(login).
 		Expect(t).
-		Body(`{"token": "test TOken"}`).
+		HeaderPresent("Authorization").
 		Status(http.StatusAccepted).
 		End()
 }
