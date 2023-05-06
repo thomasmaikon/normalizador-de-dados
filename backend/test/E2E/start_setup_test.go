@@ -82,3 +82,32 @@ func TestSimpleRequestForCreateUserthatAlredyExist(t *testing.T) {
 		Status(http.StatusConflict).
 		End()
 }
+
+func TestCreateAccoutAndSignIn(t *testing.T) {
+	login := dtos.LoginDTO{
+		Email:    "simple-Email3",
+		Password: "test",
+	}
+
+	inputData := dtos.CreateUseDTO{
+		Name:  "test",
+		Login: login,
+	}
+
+	apitest.New().
+		Handler(app).
+		Post("/signup").
+		JSON(inputData).
+		Expect(t).
+		Status(http.StatusCreated).
+		End()
+
+	apitest.New().
+		Handler(app).
+		Post("/signin").
+		JSON(login).
+		Expect(t).
+		Body(`{"token": "test TOken"}`).
+		Status(http.StatusAccepted).
+		End()
+}
