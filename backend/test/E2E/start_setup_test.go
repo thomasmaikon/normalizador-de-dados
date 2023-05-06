@@ -76,7 +76,7 @@ func TestSimpleRequestForCreateUserthatAlredyExist(t *testing.T) {
 
 	apitest.New().
 		Handler(app).
-		Post("/user").
+		Post("/signup").
 		JSON(inputData).
 		Expect(t).
 		Status(http.StatusConflict).
