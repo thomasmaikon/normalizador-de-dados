@@ -3,7 +3,9 @@ package setup
 import (
 	"hubla/desafiofullstack/controllers"
 	"hubla/desafiofullstack/models"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -14,6 +16,14 @@ type appEngine struct {
 
 func NewAppEngine() *appEngine {
 	Router := gin.Default()
+	cors.New(
+		cors.Config{
+			AllowOrigins: []string{"http://localhost:3000"},
+			AllowMethods: []string{"PUT", "PATCH", "POST", "GET"},
+			AllowHeaders: []string{"Origin", "Content-Length", "Content-Type"},
+			MaxAge:       12 * time.Hour,
+		},
+	)
 	return &appEngine{Router}
 }
 
