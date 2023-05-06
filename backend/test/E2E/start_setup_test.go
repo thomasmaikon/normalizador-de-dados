@@ -50,7 +50,7 @@ func TestSimpleRequestForCreateUser(t *testing.T) {
 
 	apitest.New().
 		Handler(app).
-		Post("/user").
+		Post("/signup").
 		JSON(inputData).
 		Expect(t).
 		Status(http.StatusCreated).
@@ -68,7 +68,7 @@ func TestSimpleRequestForCreateUserthatAlredyExist(t *testing.T) {
 
 	apitest.New().
 		Handler(app).
-		Post("/user").
+		Post("/signup").
 		JSON(inputData).
 		Expect(t).
 		Status(http.StatusCreated).
