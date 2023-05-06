@@ -27,6 +27,7 @@ func NewAppEngine() *appEngine {
 func (app *appEngine) InitializeRoutes() *appEngine {
 
 	app.Router.POST("signup", controllers.CreateUser)
+	app.Router.POST("signin", controllers.ValidateLogin)
 
 	return app
 }

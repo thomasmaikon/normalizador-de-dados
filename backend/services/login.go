@@ -9,6 +9,7 @@ import (
 
 type ILoginService interface {
 	CreateLogin(inputLogin dtos.LoginDTO) (*models.Login, *dtos.ValidationDTO)
+	ValidateCredential(inputLogin dtos.LoginDTO) *dtos.ValidationDTO
 }
 
 type loginService struct {
@@ -32,4 +33,16 @@ func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO) (*models.Logi
 	}
 
 	return login, nil
+}
+
+func (service *loginService) ValidateCredential(inputLogin dtos.LoginDTO) *dtos.ValidationDTO {
+	err := service.ILoginRepository.Validate(&inputLogin)
+	if err != nil {
+		return &dtos.ValidationDTO{
+			Code:    3,
+			Message: "User not found",
+		}
+	}
+
+	return nil
 }
