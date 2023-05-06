@@ -7,6 +7,8 @@ require (
 	github.com/ory/dockertest/v3 v3.10.0
 )
 
+require github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
