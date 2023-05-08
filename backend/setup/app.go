@@ -45,6 +45,21 @@ func (app *appEngine) RunMigrations(db *gorm.DB) *appEngine {
 		panic(err.Error())
 	}
 
+	err = db.AutoMigrate(&entitys.Creator{})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = db.AutoMigrate(&entitys.Afiliated{})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = db.AutoMigrate(&entitys.Product{})
+	if err != nil {
+		panic(err.Error())
+	}
+
 	return app
 }
 
