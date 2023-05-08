@@ -15,6 +15,7 @@ type appEngine struct {
 
 func NewAppEngine() *appEngine {
 	Router := gin.Default()
+	Router.MaxMultipartMemory = 8 << 20 // setting a max size at file, 8Mib
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
@@ -29,6 +30,7 @@ func (app *appEngine) InitializeRoutes() *appEngine {
 	app.Router.POST("signup", controllers.CreateUser)
 	app.Router.POST("signin", controllers.ValidateLogin)
 
+	app.Router.POST("upload", controllers.NormalizeData)
 	return app
 }
 
