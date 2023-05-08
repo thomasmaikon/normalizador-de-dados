@@ -66,6 +66,7 @@ func IsAuthorized(ctx *gin.Context) {
 
 	if !isValid {
 		ctx.AbortWithStatus(401)
+		return
 	}
 	ctx.AddParam("email", email)
 }
