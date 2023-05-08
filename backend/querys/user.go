@@ -1,0 +1,6 @@
+package querys
+
+const FinUserByEmail = `
+SELECT USERS.ID, USERS.NAME FROM USERS 
+INNER JOIN LOGINS ON USERS.LOGIN_ID = USERS.ID
+WHERE  LOGINS.EMAIL = @` + NamedEmail

@@ -3,6 +3,7 @@ package setup
 import (
 	"hubla/desafiofullstack/controllers"
 	"hubla/desafiofullstack/entitys"
+	"hubla/desafiofullstack/utils"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,7 @@ func (app *appEngine) InitializeRoutes() *appEngine {
 	app.Router.POST("signup", controllers.CreateUser)
 	app.Router.POST("signin", controllers.ValidateLogin)
 
+	app.Router.POST("creator", utils.IsAuthorized, controllers.CreateNewCreator)
 	app.Router.POST("upload", controllers.NormalizeData)
 	return app
 }
