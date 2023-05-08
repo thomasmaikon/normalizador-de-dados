@@ -2,7 +2,7 @@ package repositorys
 
 import (
 	"hubla/desafiofullstack/dtos"
-	"hubla/desafiofullstack/models"
+	"hubla/desafiofullstack/entitys"
 	"hubla/desafiofullstack/utils"
 
 	"gorm.io/gorm"
@@ -22,7 +22,7 @@ func NewUserRepository() IUserRepository {
 
 func (repository *userRepository) CreateUser(inputUser dtos.CreateUseDTO, loginId int) error {
 
-	newUser := &models.User{
+	newUser := &entitys.User{
 		Name:    inputUser.Name,
 		LoginID: loginId,
 	}

@@ -2,14 +2,14 @@ package repositorys
 
 import (
 	"hubla/desafiofullstack/dtos"
-	"hubla/desafiofullstack/models"
+	"hubla/desafiofullstack/entitys"
 	"hubla/desafiofullstack/utils"
 
 	"gorm.io/gorm"
 )
 
 type ILoginRepository interface {
-	Create(inputLogin *dtos.LoginDTO) (*models.Login, error)
+	Create(inputLogin *dtos.LoginDTO) (*entitys.Login, error)
 	Validate(inputLogin *dtos.LoginDTO) error
 }
 
@@ -21,8 +21,8 @@ func NewLoginRepository() ILoginRepository {
 	return &loginRepository{db: utils.GetDB()}
 }
 
-func (repository *loginRepository) Create(input *dtos.LoginDTO) (*models.Login, error) {
-	newLogin := &models.Login{
+func (repository *loginRepository) Create(input *dtos.LoginDTO) (*entitys.Login, error) {
+	newLogin := &entitys.Login{
 		Email:    input.Email,
 		Password: input.Password,
 	}
@@ -34,7 +34,7 @@ func (repository *loginRepository) Create(input *dtos.LoginDTO) (*models.Login, 
 
 func (loginRepository *loginRepository) Validate(input *dtos.LoginDTO) error {
 
-	err := loginRepository.db.Find(&models.Login{Email: input.Email, Password: input.Password})
+	err := loginRepository.db.Find(&entitys.Login{Email: input.Email, Password: input.Password})
 
 	return err.Error
 }

@@ -2,13 +2,13 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
-	"hubla/desafiofullstack/models"
+	"hubla/desafiofullstack/entitys"
 	"hubla/desafiofullstack/repositorys"
 	"log"
 )
 
 type ILoginService interface {
-	CreateLogin(inputLogin dtos.LoginDTO) (*models.Login, *dtos.ValidationDTO)
+	CreateLogin(inputLogin dtos.LoginDTO) (*entitys.Login, *dtos.ValidationDTO)
 	ValidateCredential(inputLogin dtos.LoginDTO) *dtos.ValidationDTO
 }
 
@@ -22,7 +22,7 @@ func NewLoginService() ILoginService {
 	}
 }
 
-func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO) (*models.Login, *dtos.ValidationDTO) {
+func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO) (*entitys.Login, *dtos.ValidationDTO) {
 	login, err := service.ILoginRepository.Create(&inputLogin)
 	if err != nil {
 		log.Println(err.Error())

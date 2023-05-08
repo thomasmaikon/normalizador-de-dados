@@ -2,7 +2,7 @@ package setup
 
 import (
 	"hubla/desafiofullstack/controllers"
-	"hubla/desafiofullstack/models"
+	"hubla/desafiofullstack/entitys"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -35,12 +35,12 @@ func (app *appEngine) InitializeRoutes() *appEngine {
 }
 
 func (app *appEngine) RunMigrations(db *gorm.DB) *appEngine {
-	err := db.AutoMigrate(&models.Login{})
+	err := db.AutoMigrate(&entitys.Login{})
 	if err != nil {
 		panic(err.Error())
 	}
 
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(&entitys.User{})
 	if err != nil {
 		panic(err.Error())
 	}

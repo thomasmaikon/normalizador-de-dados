@@ -1,4 +1,4 @@
-package models
+package entitys
 
 type Login struct {
 	ID       int    `gorm:"primaryKey;autoIncrement"`
