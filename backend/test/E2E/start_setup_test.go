@@ -115,3 +115,56 @@ func TestCreateAccoutAndSignIn(t *testing.T) {
 		Status(http.StatusAccepted).
 		End()
 }
+
+func TestCreateAnCreator(t *testing.T) {
+	login := dtos.LoginDTO{
+		Email:    "simple-Email4",
+		Password: "test",
+	}
+
+	inputData := dtos.CreateUseDTO{
+		Name:  "test4",
+		Login: login,
+	}
+
+	creator := dtos.CreateUseDTO{
+		Name: "SImple Test Creator",
+	}
+	result := apitest.New().
+		Handler(app).
+		Post("/signup").
+		JSON(inputData).
+		Expect(t).
+		HeaderPresent("Authorization").
+		Status(http.StatusCreated).
+		End()
+
+	jwt := result.Response.Header.Get("Authorization")
+
+	apitest.New().
+		Handler(app).
+		Post("/creator").
+		JSON(creator).
+		Header("Authorization", jwt).
+		Expect(t).
+		Status(http.StatusCreated).
+		End()
+}
+
+func TestExpectedErrorWhenCreateAnCreatorWithInvalidToken(t *testing.T) {
+	creator := dtos.CreateUseDTO{
+		Name: "SImple Test Creator",
+	}
+
+	jwt := "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJleGFtcGxlNUBob3RtYWlsLmNvbSIsImV4cCI6MTY3MDk4MTg3N30.9p1Q0p2uM7WTRToTizR2GcF_9JxVJdELxZvJDSWnPJw"
+
+	apitest.New().
+		Handler(app).
+		Post("/creator").
+		JSON(creator).
+		Header("Authorization", jwt).
+		Expect(t).
+		Status(http.StatusUnauthorized).
+		Body(``).
+		End()
+}
