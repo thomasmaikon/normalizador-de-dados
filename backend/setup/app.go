@@ -19,7 +19,9 @@ func NewAppEngine() *appEngine {
 	Router.MaxMultipartMemory = 8 << 20 // setting a max size at file, 8Mib
 
 	corsConfig := cors.DefaultConfig()
+
 	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	authRoute := cors.New(corsConfig)
 
 	Router.Use(authRoute)
