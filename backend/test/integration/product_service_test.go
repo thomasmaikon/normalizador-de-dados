@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestCadastrateProduct(t *testing.T) {
+func TestCreateProduct(t *testing.T) {
 	userService := services.NewUserService()
 	creatorService := services.NewCreatorSerivce()
 	productService := services.NewProductService()
@@ -39,7 +39,7 @@ func TestCadastrateProduct(t *testing.T) {
 	}
 }
 
-func TestGetCadastrateProduct(t *testing.T) {
+func TestGetAllProducts(t *testing.T) {
 	userService := services.NewUserService()
 	creatorService := services.NewCreatorSerivce()
 	productService := services.NewProductService()
