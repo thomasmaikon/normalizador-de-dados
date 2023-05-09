@@ -2,12 +2,14 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var dbConnection *gorm.DB
@@ -54,10 +56,19 @@ func readEnvironments(file string) (string, string, string, string, string) {
 }
 
 func openDatabaseConnection(host, port, user, password, dbname string) *gorm.DB {
+
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			LogLevel: logger.Warn,
+		},
+	)
 	psqlconn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 
-	db, err := gorm.Open(postgres.Open(psqlconn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(psqlconn), &gorm.Config{
+		Logger: newLogger,
+	})
 
 	if err != nil {
 		panic(err)
