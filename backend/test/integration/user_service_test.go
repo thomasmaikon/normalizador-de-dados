@@ -18,9 +18,13 @@ func TestCreateUser(t *testing.T) {
 		Login: loginTest,
 	}
 
-	err := userService.CreateUser(userTest)
+	userOutput, err := userService.CreateUser(userTest)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if userOutput == nil {
+		t.Fatal("An error ocurred when create user")
 	}
 }
 
@@ -36,12 +40,12 @@ func TestCreateUserThatAlredyExists(t *testing.T) {
 		Login: loginTest,
 	}
 
-	err := userService.CreateUser(userTest)
+	_, err := userService.CreateUser(userTest)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = userService.CreateUser(userTest)
+	_, err = userService.CreateUser(userTest)
 	if err == nil {
 		t.Fatal("Has expected an error, because user alredy exist")
 	}

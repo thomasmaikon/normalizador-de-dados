@@ -1,12 +1,14 @@
 package E2E
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/setup"
 	"hubla/desafiofullstack/utils"
 	"testing"
@@ -166,5 +168,104 @@ func TestExpectedErrorWhenCreateAnCreatorWithInvalidToken(t *testing.T) {
 		Expect(t).
 		Status(http.StatusUnauthorized).
 		Body(``).
+		End()
+}
+
+func TestCreateAnCreatorAndGetIt(t *testing.T) {
+	login := dtos.LoginDTO{
+		Email:    "simple-Email5",
+		Password: "test",
+	}
+
+	inputData := dtos.CreateUseDTO{
+		Name:  "test5",
+		Login: login,
+	}
+
+	creator := dtos.CreateUseDTO{
+		Name: "SImple Test Creator 2",
+	}
+
+	creatorExpected := models.CreatorModel{
+		CreatorId: 2,
+		Name:      creator.Name,
+		LeftOver:  0,
+	}
+	outputExpectedJsonCreator := fmt.Sprintf(`{"Info":{"CreatorId":%d,"Name":"%s","LeftOver":%d}}`,
+		creatorExpected.CreatorId, creatorExpected.Name, creatorExpected.LeftOver)
+
+	result := apitest.New().
+		Handler(app).
+		Post("/signup").
+		JSON(inputData).
+		Expect(t).
+		HeaderPresent("Authorization").
+		Status(http.StatusCreated).
+		End()
+
+	jwt := result.Response.Header.Get("Authorization")
+
+	apitest.New().
+		Handler(app).
+		Post("/creator").
+		JSON(creator).
+		Header("Authorization", jwt).
+		Expect(t).
+		Status(http.StatusCreated).
+		End()
+
+	apitest.New().
+		Handler(app).
+		Get("/creator").
+		Header("Authorization", jwt).
+		Expect(t).
+		Status(http.StatusOK).
+		Body(outputExpectedJsonCreator).
+		End()
+}
+
+func TestCreateAnCreatorAndGetItWithInvalidToken(t *testing.T) {
+	login := dtos.LoginDTO{
+		Email:    "simple-Email6",
+		Password: "test",
+	}
+
+	inputData := dtos.CreateUseDTO{
+		Name:  "test6",
+		Login: login,
+	}
+
+	creator := dtos.CreateUseDTO{
+		Name: "SImple Test Creator 3",
+	}
+
+	result := apitest.New().
+		Handler(app).
+		Post("/signup").
+		JSON(inputData).
+		Expect(t).
+		HeaderPresent("Authorization").
+		Status(http.StatusCreated).
+		End()
+
+	jwt := result.Response.Header.Get("Authorization")
+
+	apitest.New().
+		Handler(app).
+		Post("/creator").
+		JSON(creator).
+		Header("Authorization", jwt).
+		Expect(t).
+		Status(http.StatusCreated).
+		End()
+
+	jwt = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJleGFtcGxlNUBob3RtYWlsLmNvbSIsImV4cCI6MTY3MDk4MTg3N30.9p1Q0p2uM7WTRToTizR2GcF_9JxVJdELxZvJDSWnPJw"
+
+	apitest.New().
+		Handler(app).
+		Get("/creator").
+		Header("Authorization", jwt).
+		Expect(t).
+		Status(http.StatusUnauthorized).
 		End()
 }
