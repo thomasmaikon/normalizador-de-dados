@@ -10,13 +10,14 @@ import (
 )
 
 func CreateNewCreator(ctx *gin.Context) {
-	email, _ := ctx.Params.Get("email")
+	id := ctx.GetString("userID")
+	userId, _ := strconv.Atoi(id)
 
 	var newCreator dtos.CreatorDTO
 	ctx.BindJSON(&newCreator)
 
 	service := services.NewCreatorSerivce()
-	result := service.CreateNewCreator(&newCreator, email)
+	result := service.CreateNewCreator(&newCreator, userId)
 	if result != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})
 	} else {

@@ -7,7 +7,7 @@ import (
 )
 
 type ICreatorService interface {
-	CreateNewCreator(newCreator *dtos.CreatorDTO, email string) *dtos.ValidationDTO
+	CreateNewCreator(newCreator *dtos.CreatorDTO, userID int) *dtos.ValidationDTO
 }
 
 type creatorService struct {
@@ -22,13 +22,9 @@ func NewCreatorSerivce() ICreatorService {
 	}
 }
 
-func (service *creatorService) CreateNewCreator(newCreator *dtos.CreatorDTO, email string) *dtos.ValidationDTO {
-	user, validationDTO := service.IUserService.FindUser(email)
+func (service *creatorService) CreateNewCreator(newCreator *dtos.CreatorDTO, userID int) *dtos.ValidationDTO {
 
-	if validationDTO != nil {
-		return validationDTO
-	}
-	err := service.ICreatorRepository.CreateCreator(newCreator, user.ID)
+	err := service.ICreatorRepository.CreateCreator(newCreator, userID)
 
 	if err != nil {
 		log.Println(err.Error())

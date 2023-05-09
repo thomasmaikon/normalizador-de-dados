@@ -4,21 +4,20 @@ import (
 	"hubla/desafiofullstack/dtos"
 	"hubla/desafiofullstack/entitys"
 	"hubla/desafiofullstack/utils"
-
-	"gorm.io/gorm"
 )
 
 type ICreatorRepository interface {
 	CreateCreator(newCreator *dtos.CreatorDTO, userID int) error
+	Find(userId int) (*entitys.Creator, error)
 }
 
 type creatorRepository struct {
-	db *gorm.DB
+	uow *utils.UnitOfWork
 }
 
 func NewCreatorRepository() ICreatorRepository {
 	return &creatorRepository{
-		db: utils.GetDB(),
+		uow: utils.GetUnitOfWork(),
 	}
 }
 
@@ -28,7 +27,14 @@ func (repository *creatorRepository) CreateCreator(newCreator *dtos.CreatorDTO, 
 		UserID: userID,
 	}
 
-	err := repository.db.Create(&creator)
+	err := repository.uow.GetDB().Create(&creator)
 
 	return err.Error
+}
+
+func (repository *creatorRepository) Find(userId int) (*entitys.Creator, error) {
+	var creator entitys.Creator
+	err := repository.uow.GetDB().Table("creators").Where("USER_ID = ?", userId).Scan(&creator)
+
+	return &creator, err.Error
 }
