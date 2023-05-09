@@ -25,6 +25,12 @@ func GetDB() *gorm.DB {
 	return dbConnection
 }
 
+func GetUnitOfWork() *UnitOfWork {
+	return &UnitOfWork{
+		db: dbConnection,
+	}
+}
+
 func GetDBWithParams(port string, user, password, dbname string) *gorm.DB {
 
 	if dbConnection == nil {
