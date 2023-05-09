@@ -41,9 +41,9 @@ func (repository *productRepository) Find(description string, creatorId int) (*e
 	var product entitys.Product
 
 	err := repository.uow.GetDB().
-		Table("PRODUCTS").
+		Table("products").
 		Select("*").
-		Where("id_creator = ? AND description = '?'", creatorId, description).
+		Where("creator_id = ? AND description = ?", creatorId, description).
 		Scan(&product)
 
 	return &product, err.Error

@@ -36,7 +36,7 @@ func (repository *afiliateRepository) AddNewAfiliate(inputAfiliate *dtos.Afiliat
 
 func (repository *afiliateRepository) Find(name string, creatorId int) (*entitys.Afiliated, error) {
 	var afialte entitys.Afiliated
-	err := repository.uow.GetDB().Table("AFILIATEDS").Select("*").Where("name = '?' AND creator_id = ?", name, creatorId).Scan(&afialte)
+	err := repository.uow.GetDB().Table("afiliateds").Select("*").Where("name = ? AND creator_id = ?", name, creatorId).Scan(&afialte)
 
 	return &afialte, err.Error
 }

@@ -1,6 +1,6 @@
 package querys
 
 const AddingHistoryRow = `
-INSERT INTO HISTORYS (DATE, VALUE, ID_CREATOR, ID_PRODUCT, ID_AFILIATED, ID_TRANSACTION) 
+INSERT INTO HISTORIES (DATE, VALUE, CREATOR_ID, PRODUCT_ID, AFILIATED_ID, TRANSACTION_ID) 
 VALUES (@` + NamedDate + `, @` + NamedValue + `, @` + NamedCreatorsId + `, @` + NamedProductId + `, @` + NamedAfiliatedId + `, @` + NamedTransactionId + `)
 `
