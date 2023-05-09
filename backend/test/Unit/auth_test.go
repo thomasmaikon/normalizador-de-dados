@@ -1,17 +1,17 @@
 package unit
 
 import (
-	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/utils"
+	"strconv"
 	"testing"
 )
 
 func TestValidateTokenGeneratorJWT(t *testing.T) {
 	authService := utils.NewAuth()
 
-	input := &dtos.LoginDTO{
-		Email:    "simpleExampleTest@hotmail.com",
-		Password: "simplePassword123",
+	input := &models.UserModel{
+		UserId: 1,
 	}
 
 	token, err := authService.GenerateTokenJWT(input)
@@ -19,9 +19,10 @@ func TestValidateTokenGeneratorJWT(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	expectedEmail, ok := authService.ValidateToken(token)
+	userIdReceived, ok := authService.ValidateToken(token)
+	userId, _ := strconv.Atoi(userIdReceived)
 
-	if expectedEmail != input.Email && !ok {
+	if userId != input.UserId && !ok {
 		t.Fatal("Erro when validate token")
 	}
 }
