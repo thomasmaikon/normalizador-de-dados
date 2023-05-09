@@ -2,12 +2,14 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/entitys"
 	"hubla/desafiofullstack/repositorys"
 	"log"
 )
 
 type IAfiliatedService interface {
 	AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, email string, idCreator int) *dtos.ValidationDTO
+	FindAfiliate(name string, creatorId int) (*entitys.Afiliated, error)
 }
 
 type afiliatedService struct {
@@ -37,4 +39,8 @@ func (service *afiliatedService) AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, e
 	}
 
 	return nil
+}
+
+func (service *afiliatedService) FindAfiliate(name string, creatorId int) (*entitys.Afiliated, error) {
+	return service.afiliatedRepository.Find(name, creatorId)
 }

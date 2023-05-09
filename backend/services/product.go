@@ -2,26 +2,28 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/entitys"
 	"hubla/desafiofullstack/repositorys"
 	"log"
 )
 
 type IProductService interface {
 	CreateProduct(newProduct *dtos.ProductDTO, email string, idCreator int) *dtos.ValidationDTO
+	FindProduct(description string, creatorId int) (*entitys.Product, error)
 }
 
 type productService struct {
-	repositorys.IProductRepository
+	productRepository repositorys.IProductRepository
 }
 
 func NewProductService() IProductService {
 	return &productService{
-		IProductRepository: repositorys.NewProductRepository(),
+		productRepository: repositorys.NewProductRepository(),
 	}
 }
 
 func (service *productService) CreateProduct(newProduct *dtos.ProductDTO, email string, idCreator int) *dtos.ValidationDTO {
-	isCreated, err := service.IProductRepository.CreateNewProduct(newProduct, email, idCreator)
+	isCreated, err := service.productRepository.CreateNewProduct(newProduct, email, idCreator)
 	if err != nil {
 		log.Println(err)
 		return &dtos.ValidationDTO{
@@ -36,4 +38,8 @@ func (service *productService) CreateProduct(newProduct *dtos.ProductDTO, email 
 	}
 
 	return nil
+}
+
+func (service *productService) FindProduct(description string, creatorId int) (*entitys.Product, error) {
+	return service.productRepository.Find(description, creatorId)
 }
