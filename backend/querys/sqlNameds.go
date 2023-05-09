@@ -5,4 +5,5 @@ const (
 	NamedDescription = "description"
 	NamedPrice       = "price"
 	NamedCreatorsId  = "creator_id"
+	NamedName        = "name"
 )

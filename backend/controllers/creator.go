@@ -31,9 +31,27 @@ func CreatorAddProduct(ctx *gin.Context) {
 
 	var newProduct dtos.ProductDTO
 	ctx.ShouldBindJSON(&newProduct)
-	
+
 	service := services.NewProductService()
 	result := service.CreateProduct(&newProduct, email, idCreator)
+
+	if result != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})
+	} else {
+		ctx.JSON(http.StatusCreated, gin.H{})
+	}
+}
+
+func CreatorAddAfiliate(ctx *gin.Context) {
+	email, _ := ctx.Params.Get("email")
+	id, _ := ctx.Params.Get("id")
+	idCreator, _ := strconv.Atoi(id)
+
+	var newProduct dtos.AfiliatedDTO
+	ctx.ShouldBindJSON(&newProduct)
+
+	service := services.NewAfiliatedService()
+	result := service.AddAfiliate(&newProduct, email, idCreator)
 
 	if result != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})
