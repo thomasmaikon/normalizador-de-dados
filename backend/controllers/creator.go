@@ -4,6 +4,7 @@ import (
 	"hubla/desafiofullstack/dtos"
 	"hubla/desafiofullstack/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,6 +20,24 @@ func CreateNewCreator(ctx *gin.Context) {
 	if result != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})
 	} else {
-		ctx.JSON(http.StatusCreated, gin.H{}) 
+		ctx.JSON(http.StatusCreated, gin.H{})
+	}
+}
+
+func CreatorAddProduct(ctx *gin.Context) {
+	email, _ := ctx.Params.Get("email")
+	id, _ := ctx.Params.Get("id")
+	idCreator, _ := strconv.Atoi(id)
+
+	var newProduct dtos.ProductDTO
+	ctx.ShouldBindJSON(&newProduct)
+	
+	service := services.NewProductService()
+	result := service.CreateProduct(&newProduct, email, idCreator)
+
+	if result != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})
+	} else {
+		ctx.JSON(http.StatusCreated, gin.H{})
 	}
 }

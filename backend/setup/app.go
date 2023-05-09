@@ -34,6 +34,7 @@ func (app *appEngine) InitializeRoutes() *appEngine {
 	app.Router.POST("signin", controllers.ValidateLogin)
 
 	app.Router.POST("creator", utils.IsAuthorized, controllers.CreateNewCreator)
+	app.Router.POST("creator/:id/product", utils.IsAuthorized, controllers.CreatorAddProduct)
 	app.Router.POST("upload", controllers.NormalizeData)
 	return app
 }
