@@ -9,8 +9,8 @@ import (
 )
 
 type ILoginRepository interface {
-	Create(inputLogin *dtos.LoginDTO) (*entitys.Login, error)
-	Validate(inputLogin *dtos.LoginDTO) error
+	Create(inputLogin *dtos.LoginDTO, userId int) error
+	Validate(inputLogin *dtos.LoginDTO) (*entitys.Login, error)
 }
 
 type loginRepository struct {
@@ -21,20 +21,21 @@ func NewLoginRepository() ILoginRepository {
 	return &loginRepository{db: utils.GetDB()}
 }
 
-func (repository *loginRepository) Create(input *dtos.LoginDTO) (*entitys.Login, error) {
+func (repository *loginRepository) Create(input *dtos.LoginDTO, userId int) error {
 	newLogin := &entitys.Login{
 		Email:    input.Email,
 		Password: input.Password,
+		UserID:   userId,
 	}
 
 	err := repository.db.Create(newLogin)
 
-	return newLogin, err.Error
+	return err.Error
 }
 
-func (loginRepository *loginRepository) Validate(input *dtos.LoginDTO) error {
+func (loginRepository *loginRepository) Validate(input *dtos.LoginDTO) (*entitys.Login, error) {
+	var login entitys.Login
+	err := loginRepository.db.Find(&entitys.Login{Email: input.Email, Password: input.Password}).Scan(&login)
 
-	err := loginRepository.db.Find(&entitys.Login{Email: input.Email, Password: input.Password})
-
-	return err.Error
+	return &login, err.Error
 }

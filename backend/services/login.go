@@ -2,47 +2,45 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
-	"hubla/desafiofullstack/entitys"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
-	"log"
 )
 
 type ILoginService interface {
-	CreateLogin(inputLogin dtos.LoginDTO) (*entitys.Login, *dtos.ValidationDTO)
-	ValidateCredential(inputLogin dtos.LoginDTO) *dtos.ValidationDTO
+	CreateLogin(inputLogin dtos.LoginDTO, userId int) *dtos.ValidationDTO
+	ValidateCredential(inputLogin dtos.LoginDTO) (*models.UserModel, *dtos.ValidationDTO)
 }
 
 type loginService struct {
-	repositorys.ILoginRepository
+	loginRepository repositorys.ILoginRepository
 }
 
 func NewLoginService() ILoginService {
 	return &loginService{
-		ILoginRepository: repositorys.NewLoginRepository(),
+		loginRepository: repositorys.NewLoginRepository(),
 	}
 }
 
-func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO) (*entitys.Login, *dtos.ValidationDTO) {
-	login, err := service.ILoginRepository.Create(&inputLogin)
+func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO, userId int) *dtos.ValidationDTO {
+	err := service.loginRepository.Create(&inputLogin, userId)
 	if err != nil {
-		log.Println(err.Error())
-		return nil, &dtos.ValidationDTO{
+		return &dtos.ValidationDTO{
 			Code:    2,
 			Message: "Faild to create login",
 		}
 	}
 
-	return login, nil
+	return nil
 }
 
-func (service *loginService) ValidateCredential(inputLogin dtos.LoginDTO) *dtos.ValidationDTO {
-	err := service.ILoginRepository.Validate(&inputLogin)
+func (service *loginService) ValidateCredential(inputLogin dtos.LoginDTO) (*models.UserModel, *dtos.ValidationDTO) {
+	login, err := service.loginRepository.Validate(&inputLogin)
 	if err != nil {
-		return &dtos.ValidationDTO{
+		return nil, &dtos.ValidationDTO{
 			Code:    3,
 			Message: "User not found",
 		}
 	}
 
-	return nil
+	return &models.UserModel{UserId: login.UserID}, nil
 }

@@ -3,53 +3,54 @@ package services
 import (
 	"hubla/desafiofullstack/dtos"
 	"hubla/desafiofullstack/entitys"
-	"hubla/desafiofullstack/exceptions"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
-	"log"
 )
 
 type IUserService interface {
-	CreateUser(input dtos.CreateUseDTO) *dtos.ValidationDTO
+	CreateUser(input dtos.CreateUseDTO) (*models.UserModel, *dtos.ValidationDTO)
 	FindUser(email string) (*entitys.User, *dtos.ValidationDTO)
 }
 
 type userService struct {
-	ILoginService
-	repositorys.IUserRepository
+	loginService   ILoginService
+	userRepository repositorys.IUserRepository
 }
 
 func NewUserService() IUserService {
 	return &userService{
-		IUserRepository: repositorys.NewUserRepository(),
-		ILoginService:   NewLoginService(),
+		userRepository: repositorys.NewUserRepository(),
+		loginService:   NewLoginService(),
 	}
 }
 
-func (service *userService) CreateUser(input dtos.CreateUseDTO) *dtos.ValidationDTO {
-	login, err := service.ILoginService.CreateLogin(input.Login)
+func (service *userService) CreateUser(input dtos.CreateUseDTO) (*models.UserModel, *dtos.ValidationDTO) {
 
+	service.userRepository.Begin()
+
+	newUser, err := service.userRepository.CreateUser(input)
 	if err != nil {
-		return err
-	}
-
-	input.Login.Email = login.Email
-	input.Login.Password = login.Password
-
-	erroUser := service.IUserRepository.CreateUser(input, login.ID)
-
-	if erroUser != nil {
-		log.Fatal(erroUser.Error())
-		return &dtos.ValidationDTO{
-			Code:    exceptions.ErrorCodeCreateUser,
-			Message: exceptions.ErrorMessageCreateUser,
+		return nil, &dtos.ValidationDTO{
+			Code:    17,
+			Message: "Doesn`t possible create user",
 		}
 	}
 
-	return nil
+	validationDTO := service.loginService.CreateLogin(input.Login, newUser.ID)
+	if validationDTO != nil {
+		service.userRepository.RollBack()
+		return nil, validationDTO
+	}
+
+	service.userRepository.Commit()
+
+	return &models.UserModel{
+		UserId: newUser.ID,
+	}, nil
 }
 
 func (service *userService) FindUser(email string) (*entitys.User, *dtos.ValidationDTO) {
-	user, err := service.IUserRepository.FindUser(email)
+	user, err := service.userRepository.FindUser(email)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
 			Code:    5,

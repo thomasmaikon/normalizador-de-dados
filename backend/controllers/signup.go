@@ -15,12 +15,12 @@ func CreateUser(ctx *gin.Context) {
 
 	service := services.NewUserService()
 
-	result := service.CreateUser(inputUser)
+	user, result := service.CreateUser(inputUser)
 
 	if result != nil {
 		ctx.JSON(http.StatusConflict, gin.H{"error": result})
 	} else {
-		token, err := utils.NewAuth().GenerateTokenJWT(&inputUser.Login)
+		token, err := utils.NewAuth().GenerateTokenJWT(user)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{})
 		} else {

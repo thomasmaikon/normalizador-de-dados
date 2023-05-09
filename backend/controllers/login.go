@@ -17,11 +17,11 @@ func ValidateLogin(ctx *gin.Context) {
 
 	service := services.NewLoginService()
 
-	result := service.ValidateCredential(loginDTO)
-	if result != nil {
-		ctx.JSON(http.StatusForbidden, gin.H{"Info:": result})
+	result, validateDTO := service.ValidateCredential(loginDTO)
+	if validateDTO != nil {
+		ctx.JSON(http.StatusForbidden, gin.H{"Info:": validateDTO})
 	} else {
-		token, err := utils.NewAuth().GenerateTokenJWT(&loginDTO)
+		token, err := utils.NewAuth().GenerateTokenJWT(result)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{})
 		} else {

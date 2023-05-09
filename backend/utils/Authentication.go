@@ -2,8 +2,9 @@ package utils
 
 import (
 	"fmt"
-	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/models"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -17,8 +18,10 @@ func NewAuth() *auth {
 	return &auth{}
 }
 
-func (auth *auth) GenerateTokenJWT(input *dtos.LoginDTO) (string, error) {
+func (auth *auth) GenerateTokenJWT(user *models.UserModel) (string, error) {
 	key := []byte(os.Getenv("secretkey"))
+
+	id := strconv.Itoa(user.UserId)
 
 	token := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
@@ -26,7 +29,7 @@ func (auth *auth) GenerateTokenJWT(input *dtos.LoginDTO) (string, error) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
-			Subject:   input.Email,
+			Subject:   id,
 		})
 
 	result, err := token.SignedString(key)
@@ -48,8 +51,8 @@ func (auth *auth) ValidateToken(token string) (string, bool) {
 	})
 
 	if claims, ok := result.Claims.(jwt.MapClaims); ok && result.Valid {
-		data := claims["sub"].(string)
-		return data, true
+		userID := claims["sub"].(string)
+		return userID, true
 	} else {
 		return "", false
 	}
@@ -62,11 +65,12 @@ func IsAuthorized(ctx *gin.Context) {
 	authHeader := ctx.GetHeader("Authorization")
 	tokenString := authHeader[len(BEARER_SCHEMA)+1:]
 
-	email, isValid := NewAuth().ValidateToken(tokenString)
+	userID, isValid := NewAuth().ValidateToken(tokenString)
 
 	if !isValid {
 		ctx.AbortWithStatus(401)
 		return
 	}
-	ctx.AddParam("email", email)
+	ctx.Set("userID", userID)
+	ctx.Next()
 }
