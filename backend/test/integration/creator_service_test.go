@@ -33,3 +33,16 @@ func TestCreateCreator(t *testing.T) {
 		t.Fatal("Doesn't expire erro when create an creator")
 	}
 }
+
+func TestCreateCreatorWithInvalidUser(t *testing.T) {
+	creatorService := services.NewCreatorSerivce()
+
+	creator := dtos.CreatorDTO{
+		Name: "Simple Name",
+	}
+
+	err := creatorService.CreateNewCreator(&creator, 0)
+	if err == nil {
+		t.Fatal("An error not ocurred, expected the creator not be created")
+	}
+}

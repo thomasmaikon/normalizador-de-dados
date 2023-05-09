@@ -44,21 +44,21 @@ func TestCreateAfiliateThatAlredyExist(t *testing.T) {
 	afiliateService := services.NewAfiliatedService()
 
 	login := dtos.LoginDTO{
-		Email:    "EmailAfiliated",
-		Password: "PasswordAfiliated",
+		Email:    "EmailAfiliated2",
+		Password: "PasswordAfiliated2",
 	}
 
 	user := dtos.CreateUseDTO{
-		Name:  "UserAfiliate",
+		Name:  "UserAfiliate2",
 		Login: login,
 	}
 
 	creator := dtos.CreatorDTO{
-		Name: "CreatorAfiliate",
+		Name: "CreatorAfiliate2",
 	}
 
 	afiliate := dtos.AfiliatedDTO{
-		Name: "SimpleAfiliate",
+		Name: "SimpleAfiliate2",
 	}
 
 	userOuput, _ := userService.CreateUser(user)
@@ -73,4 +73,20 @@ func TestCreateAfiliateThatAlredyExist(t *testing.T) {
 	if validation == nil {
 		t.Fatal("An error not ocurred, expected that afiliate contains unique name")
 	}
+}
+
+func TestCreateAfiliateThatUserIdIsInvalid(t *testing.T) {
+
+	afiliateService := services.NewAfiliatedService()
+
+	afiliate := dtos.AfiliatedDTO{
+		Name: "SimpleAfiliate3",
+	}
+
+	validation := afiliateService.AddAfiliate(&afiliate, 0)
+
+	if validation == nil {
+		t.Fatal("An error not ocurred, expect the affiliate not to be created")
+	}
+
 }
