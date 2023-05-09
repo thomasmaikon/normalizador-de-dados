@@ -4,13 +4,15 @@ import (
 	"database/sql"
 	"hubla/desafiofullstack/dtos"
 	"hubla/desafiofullstack/entitys"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/querys"
 	"hubla/desafiofullstack/utils"
 )
 
 type IProductRepository interface {
-	CreateNewProduct(newProduct *dtos.ProductDTO, email string, idCreator int) (bool, error)
+	CreateNewProduct(newProduct *dtos.ProductDTO, userId int, creatorId int) (bool, error)
 	Find(description string, creatorId int) (*entitys.Product, error)
+	GetAll(creatorId int) ([]*models.ProductModel, error)
 }
 
 type productRepository struct {
@@ -23,13 +25,13 @@ func NewProductRepository() IProductRepository {
 	}
 }
 
-func (repository *productRepository) CreateNewProduct(newProduct *dtos.ProductDTO, email string, idCreator int) (bool, error) {
+func (repository *productRepository) CreateNewProduct(newProduct *dtos.ProductDTO, userId int, creatorId int) (bool, error) {
 
 	err := repository.uow.GetDB().Exec(
 		querys.CreateNewProduct,
 		sql.Named(querys.NamedDescription, newProduct.Description),
-		sql.Named(querys.NamedCreatorsId, idCreator),
-		sql.Named(querys.NamedEmail, email),
+		sql.Named(querys.NamedUserId, userId),
+		sql.Named(querys.NamedCreatorsId, creatorId),
 		sql.Named(querys.NamedPrice, newProduct.Price),
 	)
 
@@ -47,4 +49,17 @@ func (repository *productRepository) Find(description string, creatorId int) (*e
 		Scan(&product)
 
 	return &product, err.Error
+}
+
+func (repository *productRepository) GetAll(creatorId int) ([]*models.ProductModel, error) {
+
+	var product []*models.ProductModel
+
+	result := repository.uow.GetDB().
+		Table("products").
+		Select("id, description, price").
+		Where("creator_id = ?", creatorId).
+		Scan(&product)
+
+	return product, result.Error
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type IAfiliatedService interface {
-	AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, email string, idCreator int) *dtos.ValidationDTO
+	AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) *dtos.ValidationDTO
 	FindAfiliate(name string, creatorId int) (*entitys.Afiliated, error)
 }
 
@@ -22,8 +22,8 @@ func NewAfiliatedService() IAfiliatedService {
 	}
 }
 
-func (service *afiliatedService) AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, email string, idCreator int) *dtos.ValidationDTO {
-	isCreated, err := service.afiliatedRepository.AddNewAfiliate(inputAfiliate, email, idCreator)
+func (service *afiliatedService) AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) *dtos.ValidationDTO {
+	isCreated, err := service.afiliatedRepository.AddNewAfiliate(inputAfiliate, userId)
 
 	if err != nil {
 		log.Println(err)

@@ -16,13 +16,11 @@ func NormalizeData(ctx *gin.Context) {
 		return
 	}
 
-	id, _ := ctx.Params.Get("id")
-	idCreator, _ := strconv.Atoi(id)
-
-	//log.Println(file.Filename)
+	id := ctx.GetString("userID")
+	userId, _ := strconv.Atoi(id)
 
 	service := services.NewHistoryService()
-	result := service.AddHistoryAtTransactions(file, idCreator)
+	result := service.AddHistoricalTransactions(file, userId)
 
 	if result != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})

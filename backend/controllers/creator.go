@@ -25,16 +25,28 @@ func CreateNewCreator(ctx *gin.Context) {
 	}
 }
 
+func GetCreator(ctx *gin.Context) {
+	id := ctx.GetString("userID")
+	userId, _ := strconv.Atoi(id)
+
+	service := services.NewCreatorSerivce()
+	result, validationDTO := service.GetCreator(userId)
+	if validationDTO != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"Info": validationDTO})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{"Info": result})
+	}
+}
+
 func CreatorAddProduct(ctx *gin.Context) {
-	email, _ := ctx.Params.Get("email")
-	id, _ := ctx.Params.Get("id")
-	idCreator, _ := strconv.Atoi(id)
+	id := ctx.GetString("userID")
+	userId, _ := strconv.Atoi(id)
 
 	var newProduct dtos.ProductDTO
 	ctx.ShouldBindJSON(&newProduct)
 
 	service := services.NewProductService()
-	result := service.CreateProduct(&newProduct, email, idCreator)
+	result := service.CreateProduct(&newProduct, userId)
 
 	if result != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})
@@ -44,15 +56,14 @@ func CreatorAddProduct(ctx *gin.Context) {
 }
 
 func CreatorAddAfiliate(ctx *gin.Context) {
-	email, _ := ctx.Params.Get("email")
-	id, _ := ctx.Params.Get("id")
-	idCreator, _ := strconv.Atoi(id)
+	id := ctx.GetString("userID")
+	userId, _ := strconv.Atoi(id)
 
 	var newProduct dtos.AfiliatedDTO
 	ctx.ShouldBindJSON(&newProduct)
 
 	service := services.NewAfiliatedService()
-	result := service.AddAfiliate(&newProduct, email, idCreator)
+	result := service.AddAfiliate(&newProduct, userId)
 
 	if result != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})

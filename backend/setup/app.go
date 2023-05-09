@@ -35,10 +35,11 @@ func (app *appEngine) InitializeRoutes() *appEngine {
 	app.Router.POST("signin", controllers.ValidateLogin)
 
 	app.Router.POST("creator", utils.IsAuthorized, controllers.CreateNewCreator)
-	app.Router.POST("creator/:id/product", utils.IsAuthorized, controllers.CreatorAddProduct)
-	app.Router.POST("creator/:id/afiliate", utils.IsAuthorized, controllers.CreatorAddAfiliate)
-	app.Router.POST("creator/:id/upload", utils.IsAuthorized, controllers.NormalizeData)
-	
+	app.Router.GET("creator", utils.IsAuthorized, controllers.GetCreator)
+	app.Router.POST("creator/product", utils.IsAuthorized, controllers.CreatorAddProduct)
+	app.Router.POST("creator/afiliate", utils.IsAuthorized, controllers.CreatorAddAfiliate)
+	app.Router.POST("creator/upload", utils.IsAuthorized, controllers.NormalizeData)
+
 	return app
 }
 

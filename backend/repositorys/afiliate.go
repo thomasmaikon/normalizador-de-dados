@@ -9,7 +9,7 @@ import (
 )
 
 type IAfliateRepository interface {
-	AddNewAfiliate(inputAfiliate *dtos.AfiliatedDTO, email string, idCreator int) (bool, error)
+	AddNewAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) (bool, error)
 	Find(name string, creatorId int) (*entitys.Afiliated, error)
 }
 
@@ -23,12 +23,11 @@ func NewAfiliateRepository() IAfliateRepository {
 	}
 }
 
-func (repository *afiliateRepository) AddNewAfiliate(inputAfiliate *dtos.AfiliatedDTO, email string, idCreator int) (bool, error) {
+func (repository *afiliateRepository) AddNewAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) (bool, error) {
 
 	result := repository.uow.GetDB().Exec(querys.AddAfiliate,
 		sql.Named(querys.NamedName, inputAfiliate.Name),
-		sql.Named(querys.NamedCreatorsId, idCreator),
-		sql.Named(querys.NamedEmail, email),
+		sql.Named(querys.NamedUserId, userId),
 	)
 
 	return result.RowsAffected > 0, result.Error

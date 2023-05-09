@@ -3,27 +3,37 @@ package services
 import (
 	"hubla/desafiofullstack/dtos"
 	"hubla/desafiofullstack/entitys"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
 	"log"
 )
 
 type IProductService interface {
-	CreateProduct(newProduct *dtos.ProductDTO, email string, idCreator int) *dtos.ValidationDTO
+	CreateProduct(newProduct *dtos.ProductDTO, userId int) *dtos.ValidationDTO
 	FindProduct(description string, creatorId int) (*entitys.Product, error)
+	GetAllProducts(userId int) ([]*models.ProductModel, *dtos.ValidationDTO)
 }
 
 type productService struct {
 	productRepository repositorys.IProductRepository
+	creatorService    ICreatorService
 }
 
 func NewProductService() IProductService {
 	return &productService{
 		productRepository: repositorys.NewProductRepository(),
+		creatorService:    NewCreatorSerivce(),
 	}
 }
 
-func (service *productService) CreateProduct(newProduct *dtos.ProductDTO, email string, idCreator int) *dtos.ValidationDTO {
-	isCreated, err := service.productRepository.CreateNewProduct(newProduct, email, idCreator)
+func (service *productService) CreateProduct(newProduct *dtos.ProductDTO, userId int) *dtos.ValidationDTO {
+
+	creator, validationDTO := service.creatorService.GetCreator(userId)
+	if validationDTO != nil {
+		return validationDTO
+	}
+
+	isCreated, err := service.productRepository.CreateNewProduct(newProduct, userId, creator.CreatorId)
 	if err != nil {
 		log.Println(err)
 		return &dtos.ValidationDTO{
@@ -42,4 +52,21 @@ func (service *productService) CreateProduct(newProduct *dtos.ProductDTO, email 
 
 func (service *productService) FindProduct(description string, creatorId int) (*entitys.Product, error) {
 	return service.productRepository.Find(description, creatorId)
+}
+
+func (service *productService) GetAllProducts(userId int) ([]*models.ProductModel, *dtos.ValidationDTO) {
+	creator, validationDTO := service.creatorService.GetCreator(userId)
+	if validationDTO != nil {
+		return nil, validationDTO
+	}
+
+	products, err := service.productRepository.GetAll(creator.CreatorId)
+	if err != nil {
+		return nil, &dtos.ValidationDTO{
+			Code:    21,
+			Message: "Faild when get all products",
+		}
+	}
+
+	return products, nil
 }

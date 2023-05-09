@@ -8,7 +8,7 @@ import (
 
 type IHistoryService interface {
 	Add(historyRow *dtos.HistoryCompleteDTO) *dtos.ValidationDTO
-	AddHistoryAtTransactions(file *multipart.FileHeader, creatorId int) *dtos.ValidationDTO
+	AddHistoricalTransactions(file *multipart.FileHeader, userId int) *dtos.ValidationDTO
 }
 
 type historyService struct {
@@ -16,6 +16,7 @@ type historyService struct {
 	normalizedData    InormalizeDataService
 	afiliatedService  IAfiliatedService
 	productService    IProductService
+	creatorService    ICreatorService
 }
 
 func NewHistoryService() IHistoryService {
@@ -24,6 +25,7 @@ func NewHistoryService() IHistoryService {
 		normalizedData:    NewNormalizeDataService(),
 		afiliatedService:  NewAfiliatedService(),
 		productService:    NewProductService(),
+		creatorService:    NewCreatorSerivce(),
 	}
 }
 
@@ -44,7 +46,7 @@ func (service *historyService) Add(historyRow *dtos.HistoryCompleteDTO) *dtos.Va
 	return nil
 }
 
-func (service *historyService) AddHistoryAtTransactions(file *multipart.FileHeader, creatorId int) *dtos.ValidationDTO {
+func (service *historyService) AddHistoricalTransactions(file *multipart.FileHeader, userId int) *dtos.ValidationDTO {
 	normalizedData, err := service.normalizedData.GetNormalizedData(file)
 	if err != nil {
 		return &dtos.ValidationDTO{
@@ -53,10 +55,15 @@ func (service *historyService) AddHistoryAtTransactions(file *multipart.FileHead
 		}
 	}
 
+	creator, validationDTO := service.creatorService.GetCreator(userId)
+	if validationDTO != nil {
+		return validationDTO
+	}
+
 	service.historyRepository.Begin()
 	for _, historcal := range normalizedData {
-		afiliate, err := service.afiliatedService.FindAfiliate(historcal.Afiliate, creatorId)
-		if err != nil || afiliate.ID == 0{
+		afiliate, err := service.afiliatedService.FindAfiliate(historcal.Afiliate, creator.CreatorId)
+		if err != nil || afiliate.ID == 0 {
 			service.historyRepository.Rollback()
 			return &dtos.ValidationDTO{
 				Code:    17,
@@ -64,7 +71,7 @@ func (service *historyService) AddHistoryAtTransactions(file *multipart.FileHead
 			}
 		}
 
-		product, err := service.productService.FindProduct(historcal.ProductDescription, creatorId)
+		product, err := service.productService.FindProduct(historcal.ProductDescription, creator.CreatorId)
 		if err != nil || product.ID == 0 {
 			service.historyRepository.Rollback()
 			return &dtos.ValidationDTO{
@@ -75,7 +82,7 @@ func (service *historyService) AddHistoryAtTransactions(file *multipart.FileHead
 
 		validationDTO := service.Add(&dtos.HistoryCompleteDTO{
 			Date:              historcal.Date,
-			IdCreator:         creatorId,
+			IdCreator:         creator.CreatorId,
 			Value:             historcal.Value,
 			IdProduct:         product.ID,
 			IdAfiliated:       afiliate.ID,
