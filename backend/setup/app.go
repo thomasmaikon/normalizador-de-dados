@@ -3,6 +3,7 @@ package setup
 import (
 	"hubla/desafiofullstack/controllers"
 	"hubla/desafiofullstack/entitys"
+	"hubla/desafiofullstack/querys"
 	"hubla/desafiofullstack/utils"
 
 	"github.com/gin-contrib/cors"
@@ -65,6 +66,21 @@ func (app *appEngine) RunMigrations(db *gorm.DB) *appEngine {
 	err = db.AutoMigrate(&entitys.Product{})
 	if err != nil {
 		panic(err.Error())
+	}
+
+	err = db.AutoMigrate(&entitys.Transaction{})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = db.AutoMigrate(&entitys.History{})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	result := db.Exec(querys.TransactionTypes)
+	if result.Error != nil {
+		panic(result.Error.Error())
 	}
 
 	return app
