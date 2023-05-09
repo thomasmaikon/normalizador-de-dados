@@ -7,8 +7,8 @@ import (
 )
 
 type ILoginService interface {
-	CreateLogin(inputLogin dtos.LoginDTO, userId int) *dtos.ValidationDTO
-	ValidateCredential(inputLogin dtos.LoginDTO) (*models.UserModel, *dtos.ValidationDTO)
+	CreateLogin(inputLogin dtos.LoginDTO) (*models.LoginModel, *dtos.ValidationDTO)
+	ValidateCredential(inputLogin *dtos.LoginDTO) (*models.LoginModel, *dtos.ValidationDTO)
 }
 
 type loginService struct {
@@ -21,20 +21,20 @@ func NewLoginService() ILoginService {
 	}
 }
 
-func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO, userId int) *dtos.ValidationDTO {
-	err := service.loginRepository.Create(&inputLogin, userId)
+func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO) (*models.LoginModel, *dtos.ValidationDTO) {
+	login, err := service.loginRepository.Create(&inputLogin)
 	if err != nil {
-		return &dtos.ValidationDTO{
+		return nil, &dtos.ValidationDTO{
 			Code:    2,
 			Message: "Faild to create login",
 		}
 	}
 
-	return nil
+	return &models.LoginModel{LoginId: login.ID}, nil
 }
 
-func (service *loginService) ValidateCredential(inputLogin dtos.LoginDTO) (*models.UserModel, *dtos.ValidationDTO) {
-	login, err := service.loginRepository.Validate(&inputLogin)
+func (service *loginService) ValidateCredential(inputLogin *dtos.LoginDTO) (*models.LoginModel, *dtos.ValidationDTO) {
+	login, err := service.loginRepository.Validate(inputLogin)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
 			Code:    3,
@@ -42,5 +42,5 @@ func (service *loginService) ValidateCredential(inputLogin dtos.LoginDTO) (*mode
 		}
 	}
 
-	return &models.UserModel{UserId: login.UserID}, nil
+	return &models.LoginModel{LoginId: login.ID}, nil
 }

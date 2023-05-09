@@ -2,14 +2,13 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
-	"hubla/desafiofullstack/entitys"
 	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
 )
 
 type IUserService interface {
 	CreateUser(input dtos.CreateUseDTO) (*models.UserModel, *dtos.ValidationDTO)
-	FindUser(email string) (*entitys.User, *dtos.ValidationDTO)
+	GetUser(inputLogin *dtos.LoginDTO) (*models.UserModel, *dtos.ValidationDTO)
 }
 
 type userService struct {
@@ -26,9 +25,12 @@ func NewUserService() IUserService {
 
 func (service *userService) CreateUser(input dtos.CreateUseDTO) (*models.UserModel, *dtos.ValidationDTO) {
 
-	service.userRepository.Begin()
+	login, validationDTO := service.loginService.CreateLogin(input.Login)
+	if validationDTO != nil {
+		return nil, validationDTO
+	}
 
-	newUser, err := service.userRepository.CreateUser(input)
+	newUser, err := service.userRepository.CreateUser(input, login.LoginId)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
 			Code:    17,
@@ -36,26 +38,23 @@ func (service *userService) CreateUser(input dtos.CreateUseDTO) (*models.UserMod
 		}
 	}
 
-	validationDTO := service.loginService.CreateLogin(input.Login, newUser.ID)
-	if validationDTO != nil {
-		service.userRepository.RollBack()
-		return nil, validationDTO
-	}
-
-	service.userRepository.Commit()
-
 	return &models.UserModel{
 		UserId: newUser.ID,
 	}, nil
 }
 
-func (service *userService) FindUser(email string) (*entitys.User, *dtos.ValidationDTO) {
-	user, err := service.userRepository.FindUser(email)
+func (service *userService) GetUser(inputLogin *dtos.LoginDTO) (*models.UserModel, *dtos.ValidationDTO) {
+	loginModel, validationDto := service.loginService.ValidateCredential(inputLogin)
+	if validationDto != nil {
+		return nil, validationDto
+	}
+
+	user, err := service.userRepository.FindUser(loginModel.LoginId)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
-			Code:    5,
-			Message: "User doesn't find",
+			Code:    19,
+			Message: "User not find",
 		}
 	}
-	return user, nil
+	return &models.UserModel{UserId: user.ID}, nil
 }

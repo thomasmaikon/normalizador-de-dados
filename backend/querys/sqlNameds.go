@@ -11,4 +11,7 @@ const (
 	NamedAfiliatedId   = "afiliated_id"
 	NamedTransactionId = "transaction_id"
 	NamedDate          = "date"
+	NamedPassword      = "password"
+	NamedUserId        = "user_id"
+	NamedID            = "id"
 )

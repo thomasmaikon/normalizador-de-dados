@@ -9,7 +9,7 @@ import (
 )
 
 type ILoginRepository interface {
-	Create(inputLogin *dtos.LoginDTO, userId int) error
+	Create(inputLogin *dtos.LoginDTO) (*entitys.Login, error)
 	Validate(inputLogin *dtos.LoginDTO) (*entitys.Login, error)
 }
 
@@ -21,16 +21,15 @@ func NewLoginRepository() ILoginRepository {
 	return &loginRepository{db: utils.GetDB()}
 }
 
-func (repository *loginRepository) Create(input *dtos.LoginDTO, userId int) error {
+func (repository *loginRepository) Create(input *dtos.LoginDTO) (*entitys.Login, error) {
 	newLogin := &entitys.Login{
 		Email:    input.Email,
 		Password: input.Password,
-		UserID:   userId,
 	}
 
 	err := repository.db.Create(newLogin)
 
-	return err.Error
+	return newLogin, err.Error
 }
 
 func (loginRepository *loginRepository) Validate(input *dtos.LoginDTO) (*entitys.Login, error) {

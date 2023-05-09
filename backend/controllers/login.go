@@ -15,9 +15,9 @@ func ValidateLogin(ctx *gin.Context) {
 
 	ctx.BindJSON(&loginDTO)
 
-	service := services.NewLoginService()
+	service := services.NewUserService()
 
-	result, validateDTO := service.ValidateCredential(loginDTO)
+	result, validateDTO := service.GetUser(&loginDTO)
 	if validateDTO != nil {
 		ctx.JSON(http.StatusForbidden, gin.H{"Info:": validateDTO})
 	} else {
