@@ -25,12 +25,13 @@ func NewAfiliateRepository() IAfliateRepository {
 
 func (repository *afiliateRepository) AddNewAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) (bool, error) {
 
-	result := repository.uow.GetDB().Exec(querys.AddAfiliate,
+	result := repository.uow.GetDB().Exec(
+		querys.AddAfiliate,
 		sql.Named(querys.NamedName, inputAfiliate.Name),
 		sql.Named(querys.NamedUserId, userId),
 	)
 
-	return result.RowsAffected > 0, result.Error
+	return result.RowsAffected == 1, result.Error
 }
 
 func (repository *afiliateRepository) Find(name string, creatorId int) (*entitys.Afiliated, error) {
