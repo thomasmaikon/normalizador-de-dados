@@ -3,8 +3,9 @@ package entitys
 import "time"
 
 type History struct {
-	ID        int       `gorm:"autoIncrement;primaryKey"`
-	BirthDate time.Time `gorm:"type:date"`
+	ID    int `gorm:"autoIncrement;primaryKey"`
+	Value uint64
+	Date  time.Time `gorm:"type:date"`
 
 	CreatorID int
 	Creator   Creator
