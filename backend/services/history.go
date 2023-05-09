@@ -56,7 +56,8 @@ func (service *historyService) AddHistoryAtTransactions(file *multipart.FileHead
 	service.historyRepository.Begin()
 	for _, historcal := range normalizedData {
 		afiliate, err := service.afiliatedService.FindAfiliate(historcal.Afiliate, creatorId)
-		if err != nil {
+		if err != nil || afiliate.ID == 0{
+			service.historyRepository.Rollback()
 			return &dtos.ValidationDTO{
 				Code:    17,
 				Message: "Does`not find respective afiliated",
@@ -64,12 +65,14 @@ func (service *historyService) AddHistoryAtTransactions(file *multipart.FileHead
 		}
 
 		product, err := service.productService.FindProduct(historcal.ProductDescription, creatorId)
-		if err != nil {
+		if err != nil || product.ID == 0 {
+			service.historyRepository.Rollback()
 			return &dtos.ValidationDTO{
 				Code:    18,
 				Message: "Does`not find respective product",
 			}
 		}
+
 		validationDTO := service.Add(&dtos.HistoryCompleteDTO{
 			Date:              historcal.Date,
 			IdCreator:         creatorId,
