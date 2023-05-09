@@ -6,6 +6,7 @@ import (
 	"mime/multipart"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -48,11 +49,11 @@ func (normalize *normalizeDataService) castingFile(file *multipart.FileHeader) (
 }
 
 func (normalize *normalizeDataService) normalize(inputData string) *models.HistoryModel {
-	pattern := "([0-9])([T0-9:-]+)([A-Z -]+) [ ]+ ([0-9]+)([A-Z ]+)"
+	pattern := "([0-9])([T0-9:-]+)([A-Z- ]+)[ ]+([0-9]+)([A-Z ]+)"
 	regex := regexp.MustCompile(pattern)
 	submatches := regex.FindAllStringSubmatch(inputData, -1)
 
-	layoutTime := "2000-02-27T17:32:06-70:00"
+	layoutTime := "2006-01-02T15:04:05-07:00"
 
 	idTransaction, err := strconv.Atoi(submatches[0][1])
 	if err != nil {
@@ -64,7 +65,7 @@ func (normalize *normalizeDataService) normalize(inputData string) *models.Histo
 		return nil
 	}
 
-	description := submatches[0][3]
+	description := strings.TrimSpace(submatches[0][3])
 
 	LeftOver, err := strconv.ParseUint(submatches[0][4], 10, 64)
 	if err != nil {
