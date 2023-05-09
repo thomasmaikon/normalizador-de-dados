@@ -1,10 +1,9 @@
 package controllers
 
 import (
-	"bufio"
-	"fmt"
-	"log"
+	"hubla/desafiofullstack/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,16 +16,17 @@ func NormalizeData(ctx *gin.Context) {
 		return
 	}
 
-	log.Println(file.Filename)
+	id, _ := ctx.Params.Get("id")
+	idCreator, _ := strconv.Atoi(id)
 
-	src, err := file.Open()
+	//log.Println(file.Filename)
 
-	scanner := bufio.NewScanner(src)
+	service := services.NewHistoryService()
+	result := service.AddHistoryAtTransactions(file, idCreator)
 
-	for scanner.Scan() {
-		line := scanner.Text()
-		fmt.Println(line)
+	if result != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": result})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{"Info:": "Data updated"})
 	}
-
-	ctx.JSON(http.StatusOK, gin.H{"Info:": "Data updated"})
 }
