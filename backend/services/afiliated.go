@@ -3,6 +3,7 @@ package services
 import (
 	"hubla/desafiofullstack/dtos"
 	"hubla/desafiofullstack/entitys"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
 	"log"
 )
@@ -10,6 +11,7 @@ import (
 type IAfiliatedService interface {
 	AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) *dtos.ValidationDTO
 	FindAfiliate(name string, creatorId int) (*entitys.Afiliated, error)
+	GetAllAfiliates(userId int) ([]*models.AfiliateModel, *dtos.ValidationDTO)
 }
 
 type afiliatedService struct {
@@ -43,4 +45,16 @@ func (service *afiliatedService) AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, u
 
 func (service *afiliatedService) FindAfiliate(name string, creatorId int) (*entitys.Afiliated, error) {
 	return service.afiliatedRepository.Find(name, creatorId)
+}
+
+func (service *afiliatedService) GetAllAfiliates(userId int) ([]*models.AfiliateModel, *dtos.ValidationDTO) {
+	afiliates, err := service.afiliatedRepository.GetAll(userId)
+	if err != nil {
+		return nil, &dtos.ValidationDTO{
+			Code:    25,
+			Message: "Faild to find all afiliates",
+		}
+	}
+
+	return afiliates, nil
 }

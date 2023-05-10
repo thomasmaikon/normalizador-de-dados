@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"hubla/desafiofullstack/dtos"
 	"hubla/desafiofullstack/entitys"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/querys"
 	"hubla/desafiofullstack/utils"
 )
@@ -11,6 +12,7 @@ import (
 type IAfliateRepository interface {
 	AddNewAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) (bool, error)
 	Find(name string, creatorId int) (*entitys.Afiliated, error)
+	GetAll(userId int) ([]*models.AfiliateModel, error)
 }
 
 type afiliateRepository struct {
@@ -39,4 +41,15 @@ func (repository *afiliateRepository) Find(name string, creatorId int) (*entitys
 	err := repository.uow.GetDB().Table("afiliateds").Select("*").Where("name = ? AND creator_id = ?", name, creatorId).Scan(&afialte)
 
 	return &afialte, err.Error
+}
+
+func (repository *afiliateRepository) GetAll(userId int) ([]*models.AfiliateModel, error) {
+	var afiliates []*models.AfiliateModel
+
+	result := repository.uow.GetDB().Raw(
+		querys.GetAllAfiliates,
+		sql.Named(querys.NamedUserId, userId),
+	).Scan(&afiliates)
+
+	return afiliates, result.Error
 }
