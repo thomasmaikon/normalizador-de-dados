@@ -1,6 +1,6 @@
 package dtos
 
-type CreateUseDTO struct {
+type UserDTO struct {
 	Name  string   `json:"name"`
 	Login LoginDTO `json:"login"`
 }
