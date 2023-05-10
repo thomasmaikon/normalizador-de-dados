@@ -6,30 +6,30 @@ import (
 	"mime/multipart"
 )
 
-type IHistoryService interface {
+type IHistoricalService interface {
 	Add(historyRow *dtos.HistoryCompleteDTO) *dtos.ValidationDTO
 	AddHistoricalTransactions(file *multipart.FileHeader, userId int) *dtos.ValidationDTO
 }
 
-type historyService struct {
-	historyRepository repositorys.IHistoryRepository
-	normalizedData    InormalizeDataService
-	afiliatedService  IAfiliatedService
-	productService    IProductService
-	creatorService    ICreatorService
+type historicalService struct {
+	historyRepository     repositorys.IHistoricalRepository
+	normalizedDataService InormalizeDataService
+	afiliatedService      IAfiliatedService
+	productService        IProductService
+	creatorService        ICreatorService
 }
 
-func NewHistoryService() IHistoryService {
-	return &historyService{
-		historyRepository: repositorys.NewHistoryService(),
-		normalizedData:    NewNormalizeDataService(),
-		afiliatedService:  NewAfiliatedService(),
-		productService:    NewProductService(),
-		creatorService:    NewCreatorSerivce(),
+func NewHistoricalService() IHistoricalService {
+	return &historicalService{
+		historyRepository:     repositorys.NewHistoricalService(),
+		normalizedDataService: NewNormalizeDataService(),
+		afiliatedService:      NewAfiliatedService(),
+		productService:        NewProductService(),
+		creatorService:        NewCreatorSerivce(),
 	}
 }
 
-func (service *historyService) Add(historyRow *dtos.HistoryCompleteDTO) *dtos.ValidationDTO {
+func (service *historicalService) Add(historyRow *dtos.HistoryCompleteDTO) *dtos.ValidationDTO {
 	isComplete, err := service.historyRepository.AddHistoryRow(historyRow)
 	if err != nil {
 		return &dtos.ValidationDTO{
@@ -46,8 +46,8 @@ func (service *historyService) Add(historyRow *dtos.HistoryCompleteDTO) *dtos.Va
 	return nil
 }
 
-func (service *historyService) AddHistoricalTransactions(file *multipart.FileHeader, userId int) *dtos.ValidationDTO {
-	normalizedData, err := service.normalizedData.GetNormalizedData(file)
+func (service *historicalService) AddHistoricalTransactions(file *multipart.FileHeader, userId int) *dtos.ValidationDTO {
+	normalizedData, err := service.normalizedDataService.GetNormalizedData(file)
 	if err != nil {
 		return &dtos.ValidationDTO{
 			Code:    16,

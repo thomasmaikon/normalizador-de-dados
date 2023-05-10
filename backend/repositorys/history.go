@@ -7,24 +7,24 @@ import (
 	"hubla/desafiofullstack/utils"
 )
 
-type IHistoryRepository interface {
+type IHistoricalRepository interface {
 	AddHistoryRow(history *dtos.HistoryCompleteDTO) (bool, error)
 	Begin()
 	Commit()
 	Rollback()
 }
 
-type historyRepository struct {
+type historicalRepository struct {
 	uow *utils.UnitOfWork
 }
 
-func NewHistoryService() IHistoryRepository {
-	return &historyRepository{
+func NewHistoricalService() IHistoricalRepository {
+	return &historicalRepository{
 		uow: utils.GetUnitOfWork(),
 	}
 }
 
-func (repository *historyRepository) AddHistoryRow(history *dtos.HistoryCompleteDTO) (bool, error) {
+func (repository *historicalRepository) AddHistoryRow(history *dtos.HistoryCompleteDTO) (bool, error) {
 	result := repository.uow.GetDB().Exec(
 		querys.AddingHistoryRow,
 		sql.Named(querys.NamedDate, history.Date),
@@ -38,14 +38,14 @@ func (repository *historyRepository) AddHistoryRow(history *dtos.HistoryComplete
 	return result.RowsAffected == 1, result.Error
 }
 
-func (repository *historyRepository) Begin() {
+func (repository *historicalRepository) Begin() {
 	repository.uow.Begin()
 }
 
-func (repository *historyRepository) Commit() {
+func (repository *historicalRepository) Commit() {
 	repository.uow.Commit()
 }
 
-func (repository *historyRepository) Rollback() {
+func (repository *historicalRepository) Rollback() {
 	repository.uow.Rollback()
 }

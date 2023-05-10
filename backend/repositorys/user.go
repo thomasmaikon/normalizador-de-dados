@@ -9,7 +9,7 @@ import (
 )
 
 type IUserRepository interface {
-	CreateUser(inputUser dtos.CreateUseDTO, loginId int) (*entitys.User, error)
+	CreateUser(inputUser dtos.UserDTO, loginId int) (*entitys.User, error)
 	FindUser(loginId int) (*entitys.User, error)
 	Begin()
 	Commit()
@@ -24,7 +24,7 @@ func NewUserRepository() IUserRepository {
 	return &userRepository{uow: utils.GetUnitOfWork()}
 }
 
-func (repository *userRepository) CreateUser(inputUser dtos.CreateUseDTO, loginId int) (*entitys.User, error) {
+func (repository *userRepository) CreateUser(inputUser dtos.UserDTO, loginId int) (*entitys.User, error) {
 
 	newUser := &entitys.User{
 		Name:    inputUser.Name,

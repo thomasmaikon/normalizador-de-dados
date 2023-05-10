@@ -10,7 +10,7 @@ import (
 )
 
 func CreateUser(ctx *gin.Context) {
-	var inputUser dtos.CreateUseDTO
+	var inputUser dtos.UserDTO
 	ctx.BindJSON(&inputUser)
 
 	service := services.NewUserService()

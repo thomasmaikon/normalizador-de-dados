@@ -19,7 +19,7 @@ func NormalizeData(ctx *gin.Context) {
 	id := ctx.GetString("userID")
 	userId, _ := strconv.Atoi(id)
 
-	service := services.NewHistoryService()
+	service := services.NewHistoricalService()
 	result := service.AddHistoricalTransactions(file, userId)
 
 	if result != nil {

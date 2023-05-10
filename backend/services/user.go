@@ -7,7 +7,7 @@ import (
 )
 
 type IUserService interface {
-	CreateUser(input dtos.CreateUseDTO) (*models.UserModel, *dtos.ValidationDTO)
+	CreateUser(input dtos.UserDTO) (*models.UserModel, *dtos.ValidationDTO)
 	GetUser(inputLogin *dtos.LoginDTO) (*models.UserModel, *dtos.ValidationDTO)
 }
 
@@ -23,7 +23,7 @@ func NewUserService() IUserService {
 	}
 }
 
-func (service *userService) CreateUser(input dtos.CreateUseDTO) (*models.UserModel, *dtos.ValidationDTO) {
+func (service *userService) CreateUser(input dtos.UserDTO) (*models.UserModel, *dtos.ValidationDTO) {
 
 	login, validationDTO := service.loginService.CreateLogin(input.Login)
 	if validationDTO != nil {
