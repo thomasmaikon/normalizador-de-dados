@@ -108,17 +108,17 @@ func TestAddTransactionsInHistoricalWithInvalidProduct(t *testing.T) {
 	historicalService := services.NewHistoricalService()
 
 	login := dtos.LoginDTO{
-		Email:    "HistoricalLogin",
-		Password: "HistoricalLogin",
+		Email:    "HistoricalLogin2",
+		Password: "HistoricalLogin2",
 	}
 
 	user := dtos.UserDTO{
-		Name:  "UserHistorical",
+		Name:  "UserHistorical2",
 		Login: login,
 	}
 
 	creator := dtos.CreatorDTO{
-		Name: "CreatorHistorical",
+		Name: "CreatorHistorical2",
 	}
 
 	afiliates := []dtos.AfiliatedDTO{

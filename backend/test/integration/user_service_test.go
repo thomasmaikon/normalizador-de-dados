@@ -32,11 +32,11 @@ func TestCreateUserThatAlredyExists(t *testing.T) {
 	userService := services.NewUserService()
 
 	loginTest := dtos.LoginDTO{
-		Email:    "test2",
-		Password: "test",
+		Email:    "CreateUserTest2",
+		Password: "CreateUserTest2",
 	}
 	userTest := dtos.UserDTO{
-		Name:  "test2",
+		Name:  "CreateUserTest2",
 		Login: loginTest,
 	}
 

@@ -45,22 +45,22 @@ func TestGetAllProducts(t *testing.T) {
 	productService := services.NewProductService()
 
 	login := dtos.LoginDTO{
-		Email:    "EmailProductTest2",
-		Password: "EmailProductTest",
+		Email:    "EmailProduct2",
+		Password: "EmailProduct",
 	}
 
 	user := dtos.UserDTO{
-		Name:  "NameProductTest2",
+		Name:  "NameProduct2",
 		Login: login,
 	}
 
 	creator := dtos.CreatorDTO{
-		Name: "CreatorProductTest2",
+		Name: "CreatorProduct2",
 	}
 
 	products := []dtos.ProductDTO{
 		{
-			Description: "Simple Product test2",
+			Description: "Simple Product 2",
 			Price:       "8.5",
 		},
 		{
@@ -75,7 +75,7 @@ func TestGetAllProducts(t *testing.T) {
 
 	userOtput, _ := userService.CreateUser(user)
 	creatorService.CreateNewCreator(&creator, userOtput.UserId)
-	creatorOutput, _ := creatorService.GetCreator(userOtput.UserId)
+	creatorService.GetCreator(userOtput.UserId)
 
 	for _, product := range products {
 		output := productService.CreateProduct(&product, userOtput.UserId)
@@ -84,8 +84,8 @@ func TestGetAllProducts(t *testing.T) {
 		}
 	}
 
-	productOuput, _ := productService.GetAllProducts(creatorOutput.CreatorId)
+	productOuput, _ := productService.GetAllProducts(userOtput.UserId)
 	if len(productOuput) != len(products) {
-		t.Fatal("Not expected error")
+		t.Fatal("Not expected different sizes")
 	}
 }
