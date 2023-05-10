@@ -42,7 +42,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestSimpleRequestForCreateUser(t *testing.T) {
-	inputData := dtos.CreateUseDTO{
+	inputData := dtos.UserDTO{
 		Name: "test",
 		Login: dtos.LoginDTO{
 			Email:    "simple-Email",
@@ -61,7 +61,7 @@ func TestSimpleRequestForCreateUser(t *testing.T) {
 }
 
 func TestSimpleRequestForCreateUserthatAlredyExist(t *testing.T) {
-	inputData := dtos.CreateUseDTO{
+	inputData := dtos.UserDTO{
 		Name: "test",
 		Login: dtos.LoginDTO{
 			Email:    "simple-Email2",
@@ -94,7 +94,7 @@ func TestCreateAccoutAndSignIn(t *testing.T) {
 		Password: "test",
 	}
 
-	inputData := dtos.CreateUseDTO{
+	inputData := dtos.UserDTO{
 		Name:  "test",
 		Login: login,
 	}
@@ -124,12 +124,12 @@ func TestCreateAnCreator(t *testing.T) {
 		Password: "test",
 	}
 
-	inputData := dtos.CreateUseDTO{
+	inputData := dtos.UserDTO{
 		Name:  "test4",
 		Login: login,
 	}
 
-	creator := dtos.CreateUseDTO{
+	creator := dtos.UserDTO{
 		Name: "SImple Test Creator",
 	}
 	result := apitest.New().
@@ -154,7 +154,7 @@ func TestCreateAnCreator(t *testing.T) {
 }
 
 func TestExpectedErrorWhenCreateAnCreatorWithInvalidToken(t *testing.T) {
-	creator := dtos.CreateUseDTO{
+	creator := dtos.UserDTO{
 		Name: "SImple Test Creator",
 	}
 
@@ -177,12 +177,12 @@ func TestCreateAnCreatorAndGetIt(t *testing.T) {
 		Password: "test",
 	}
 
-	inputData := dtos.CreateUseDTO{
+	inputData := dtos.UserDTO{
 		Name:  "test5",
 		Login: login,
 	}
 
-	creator := dtos.CreateUseDTO{
+	creator := dtos.UserDTO{
 		Name: "SImple Test Creator 2",
 	}
 
@@ -230,12 +230,12 @@ func TestCreateAnCreatorAndGetItWithInvalidToken(t *testing.T) {
 		Password: "test",
 	}
 
-	inputData := dtos.CreateUseDTO{
+	inputData := dtos.UserDTO{
 		Name:  "test6",
 		Login: login,
 	}
 
-	creator := dtos.CreateUseDTO{
+	creator := dtos.UserDTO{
 		Name: "SImple Test Creator 3",
 	}
 

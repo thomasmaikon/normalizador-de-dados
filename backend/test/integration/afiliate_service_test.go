@@ -16,7 +16,7 @@ func TestCreateAfiliate(t *testing.T) {
 		Password: "PasswordAfiliated",
 	}
 
-	user := dtos.CreateUseDTO{
+	user := dtos.UserDTO{
 		Name:  "UserAfiliate",
 		Login: login,
 	}
@@ -48,7 +48,7 @@ func TestCreateAfiliateThatAlredyExist(t *testing.T) {
 		Password: "PasswordAfiliated2",
 	}
 
-	user := dtos.CreateUseDTO{
+	user := dtos.UserDTO{
 		Name:  "UserAfiliate2",
 		Login: login,
 	}

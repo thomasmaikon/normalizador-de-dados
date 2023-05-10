@@ -14,7 +14,7 @@ func TestCreateCreator(t *testing.T) {
 		Email:    "test_3",
 		Password: "test_3",
 	}
-	user := dtos.CreateUseDTO{
+	user := dtos.UserDTO{
 		Name:  "test",
 		Login: login,
 	}

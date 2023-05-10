@@ -13,7 +13,7 @@ func TestCreateUser(t *testing.T) {
 		Email:    "test",
 		Password: "test",
 	}
-	userTest := dtos.CreateUseDTO{
+	userTest := dtos.UserDTO{
 		Name:  "test",
 		Login: loginTest,
 	}
@@ -35,7 +35,7 @@ func TestCreateUserThatAlredyExists(t *testing.T) {
 		Email:    "test2",
 		Password: "test",
 	}
-	userTest := dtos.CreateUseDTO{
+	userTest := dtos.UserDTO{
 		Name:  "test2",
 		Login: loginTest,
 	}

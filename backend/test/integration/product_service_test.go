@@ -16,7 +16,7 @@ func TestCreateProduct(t *testing.T) {
 		Password: "EmailProductTest",
 	}
 
-	user := dtos.CreateUseDTO{
+	user := dtos.UserDTO{
 		Name:  "NameProductTest",
 		Login: login,
 	}
@@ -49,7 +49,7 @@ func TestGetAllProducts(t *testing.T) {
 		Password: "EmailProductTest",
 	}
 
-	user := dtos.CreateUseDTO{
+	user := dtos.UserDTO{
 		Name:  "NameProductTest2",
 		Login: login,
 	}
