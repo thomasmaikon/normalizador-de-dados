@@ -12,6 +12,7 @@ type IHistoricalService interface {
 	AddHistoricalTransactions(file *multipart.FileHeader, userId int) *dtos.ValidationDTO
 	GetAllHistorical(userId int) ([]*models.HistoricalModelWithOutJoins, *dtos.ValidationDTO)
 	GetAmmountAtCreator(creatorId int) (uint64, *dtos.ValidationDTO)
+	GetAfiliateHistorical(userId int, afiliateId int) (*dtos.HistoricalCompleteAfiliateDTO, *dtos.ValidationDTO)
 }
 
 type historicalService struct {
@@ -124,7 +125,7 @@ func (service *historicalService) GetAmmountAtCreator(creatorId int) (uint64, *d
 			Message: "Error when search amount",
 		}
 	}
-	
+
 	paid, err := service.historyRepository.GetAmmountPaidAtCreator(creatorId)
 	if err != nil {
 		return 0, &dtos.ValidationDTO{
@@ -134,4 +135,33 @@ func (service *historicalService) GetAmmountAtCreator(creatorId int) (uint64, *d
 	}
 
 	return (receive - paid), nil
+}
+
+func (service *historicalService) GetAfiliateHistorical(userId int, afiliateId int) (*dtos.HistoricalCompleteAfiliateDTO, *dtos.ValidationDTO) {
+	creator, validationDTO := service.creatorService.GetCreator(userId)
+	if validationDTO != nil {
+		return nil, validationDTO
+	}
+
+	afiliateHistorical, err := service.historyRepository.GetHistoricalFromAfiliate(creator.CreatorId, afiliateId)
+	if err != nil {
+		return nil, &dtos.ValidationDTO{
+			Code:    28,
+			Message: "Error when search historical at afiliate",
+		}
+	}
+
+	amountReceived, err := service.historyRepository.GetAmountReceivedFromAfiliate(creator.CreatorId, afiliateId)
+	if err != nil {
+		return nil, &dtos.ValidationDTO{
+			Code:    29,
+			Message: "Error when get amount at afiliate",
+		}
+	}
+
+	historicalDTO := &dtos.HistoricalCompleteAfiliateDTO{
+		AfiliateHistoricals: afiliateHistorical,
+		Amount:              amountReceived,
+	}
+	return historicalDTO, nil
 }
