@@ -49,6 +49,5 @@ func (service *creatorService) GetCreator(userId int) (*models.CreatorModel, *dt
 	return &models.CreatorModel{
 		CreatorId: creator.ID,
 		Name:      creator.Name,
-		LeftOver:  0,
 	}, nil
 }
