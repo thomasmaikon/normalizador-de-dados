@@ -8,6 +8,7 @@ VALUES (@` + NamedDate + `, @` + NamedValue + `, @` + NamedCreatorsId + `, @` + 
 const GetAllDataFromUser = `
 SELECT 
 	AFILIATEDS.Name as afiliate,
+	HISTORIES.Afiliated_id as afiliate_id,
 	PRODUCTS.Description as product, 
 	TRANSACTIONS.Description as transaction,
 	HISTORIES.Value as Value,
