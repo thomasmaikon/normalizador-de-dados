@@ -298,3 +298,133 @@ func TestGetAllHistorical(t *testing.T) {
 	}
 
 }
+
+func TestGetAllHistoricalFromAfiliate(t *testing.T) {
+	userService := services.NewUserService()
+	creatorService := services.NewCreatorSerivce()
+	productService := services.NewProductService()
+	afiliateService := services.NewAfiliatedService()
+	historicalService := services.NewHistoricalService()
+
+	login := dtos.LoginDTO{
+		Email:    "HistoricalLogin4",
+		Password: "HistoricalLogin4",
+	}
+
+	user := dtos.UserDTO{
+		Name:  "UserHistorical4",
+		Login: login,
+	}
+
+	creator := dtos.CreatorDTO{
+		Name: "CreatorHistorical4",
+	}
+
+	products := []dtos.ProductDTO{
+		{
+			Description: "Simple 10",
+			Price:       "1",
+		},
+		{
+			Description: "Simple 11",
+			Price:       "2",
+		},
+		{
+			Description: "Simple 12",
+			Price:       "3",
+		},
+	}
+
+	afiliates := []dtos.AfiliatedDTO{
+		{
+			Name: "People10",
+		},
+	}
+
+	/* transactionsDescriptions := map[int]string{
+		1: "Venda produtor",
+		2: "Venda afiliado",
+		3: "Comissao paga",
+		4: "Comissao recebida",
+	} */
+
+	userOutput, _ := userService.CreateUser(user)
+	creatorService.CreateNewCreator(&creator, userOutput.UserId)
+	creatorOutput, _ := creatorService.GetCreator(userOutput.UserId)
+
+	for _, product := range products {
+		productService.CreateProduct(&product, userOutput.UserId)
+	}
+
+	for _, afiliate := range afiliates {
+		afiliateService.AddAfiliate(&afiliate, userOutput.UserId)
+	}
+
+	productsOutput, _ := productService.GetAllProducts(userOutput.UserId)
+	afiliatesOutput, _ := afiliateService.GetAllAfiliates(userOutput.UserId)
+
+	historcals := []dtos.HistoryCompleteDTO{
+		{
+			IdTransactionType: 1,
+			IdCreator:         creatorOutput.CreatorId,
+			IdProduct:         productsOutput[0].Id,
+			Value:             0000012750,
+			IdAfiliated:       afiliatesOutput[0].Id,
+		},
+		{
+			IdTransactionType: 4,
+			IdCreator:         creatorOutput.CreatorId,
+			IdProduct:         productsOutput[1].Id,
+			Value:             0000050000,
+			IdAfiliated:       afiliatesOutput[0].Id,
+		},
+		{
+			IdTransactionType: 2,
+			IdCreator:         creatorOutput.CreatorId,
+			IdProduct:         productsOutput[2].Id,
+			Value:             0000155000,
+			IdAfiliated:       afiliatesOutput[0].Id,
+		},
+	}
+
+	historicalAfiliateExpected := &dtos.HistoricalCompleteAfiliateDTO{
+		AfiliateHistoricals: []*models.HistoricalModelWithOutJoins{
+			&models.HistoricalModelWithOutJoins{
+				AfiliateName:           "People10",
+				AfiliateId:             0,
+				ProductDescription:     "Simple 7",
+				TransactionDescription: "Venda produtor",
+				Value:                  0000012750,
+			},
+			&models.HistoricalModelWithOutJoins{
+				AfiliateName:           "People10",
+				AfiliateId:             0,
+				ProductDescription:     "Simple 8",
+				TransactionDescription: "Comissao recebida",
+				Value:                  0000050000,
+			},
+			&models.HistoricalModelWithOutJoins{
+				AfiliateName:           "People10",
+				AfiliateId:             0,
+				ProductDescription:     "Simple 9",
+				TransactionDescription: "Venda afiliado",
+				Value:                  0000155000,
+			},
+		},
+		Amount: 0000050000,
+	}
+
+	for _, historical := range historcals {
+		validationDTO := historicalService.Add(&historical)
+		if validationDTO != nil {
+			t.Fatal("Err when add historical row, it is not expected")
+		}
+	}
+
+	historicalsOutput, _ := historicalService.GetAfiliateHistorical(userOutput.UserId, afiliatesOutput[0].Id)
+
+	if len(historicalsOutput.AfiliateHistoricals) != len(historicalAfiliateExpected.AfiliateHistoricals) ||
+		historicalsOutput.Amount != historicalAfiliateExpected.Amount {
+		t.Fatal("Unexpected error, objects were supposed to be the same")
+	}
+}
