@@ -35,7 +35,7 @@ func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO) (*models.Logi
 
 func (service *loginService) ValidateCredential(inputLogin *dtos.LoginDTO) (*models.LoginModel, *dtos.ValidationDTO) {
 	login, err := service.loginRepository.Validate(inputLogin)
-	if err != nil {
+	if err != nil || login.ID == 0{
 		return nil, &dtos.ValidationDTO{
 			Code:    3,
 			Message: "User not found",
