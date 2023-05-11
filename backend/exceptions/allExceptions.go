@@ -12,4 +12,7 @@ const (
 
 	ErrorCodeAfiliateNotFound    = 4
 	ErrorMessageAfiliateNotFound = "Afiliado nao encontrado"
+
+	ErrorCodeAddAfiliate   = 5
+	ErrorMessageddAfiliate = "Falha ao adicionar afiliado"
 )

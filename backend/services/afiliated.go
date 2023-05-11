@@ -28,16 +28,11 @@ func NewAfiliatedService() IAfiliatedService {
 func (service *afiliatedService) AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) *dtos.ValidationDTO {
 	isCreated, err := service.afiliatedRepository.AddNewAfiliate(inputAfiliate, userId)
 
-	if err != nil {
+	if err != nil || !isCreated {
 		log.Println(err)
 		return &dtos.ValidationDTO{
-			Code:    10,
-			Message: "Error when add new afiliate",
-		}
-	} else if !isCreated {
-		return &dtos.ValidationDTO{
-			Code:    11,
-			Message: "Invalid creator data to add afiliate",
+			Code:    exceptions.ErrorCodeAddAfiliate,
+			Message: exceptions.ErrorMessageddAfiliate,
 		}
 	}
 
