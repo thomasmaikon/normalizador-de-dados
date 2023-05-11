@@ -42,13 +42,17 @@ func (auth *auth) GenerateTokenJWT(user *models.UserModel) (string, error) {
 
 func (auth *auth) ValidateToken(token string) (string, bool) {
 
-	result, _ := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+	result, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 
 			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
 		}
 		return []byte(os.Getenv("secretkey")), nil
 	})
+
+	if err != nil {
+		return "", false
+	}
 
 	if claims, ok := result.Claims.(jwt.MapClaims); ok && result.Valid {
 		userID := claims["sub"].(string)
