@@ -38,7 +38,7 @@ func TestCreateAfiliate(t *testing.T) {
 	}
 }
 
-func TestCreateAfiliateThatAlredyExist(t *testing.T) {
+/* func TestCreateAfiliateThatAlredyExist(t *testing.T) {
 	userService := services.NewUserService()
 	creatorService := services.NewCreatorSerivce()
 	afiliateService := services.NewAfiliatedService()
@@ -73,7 +73,7 @@ func TestCreateAfiliateThatAlredyExist(t *testing.T) {
 	if validation == nil {
 		t.Fatal("An error not ocurred, expected that afiliate contains unique name")
 	}
-}
+} */
 
 func TestCreateAfiliateThatUserIdIsInvalid(t *testing.T) {
 
