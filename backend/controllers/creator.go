@@ -71,3 +71,17 @@ func CreatorAddAfiliate(ctx *gin.Context) {
 		ctx.JSON(http.StatusCreated, gin.H{})
 	}
 }
+
+func GetHistoricalTransactions(ctx *gin.Context) {
+	id := ctx.GetString("userID")
+	userId, _ := strconv.Atoi(id)
+
+	service := services.NewHistoricalService()
+	resutl, validationDTO := service.GetAllHistorical(userId)
+
+	if validationDTO != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": validationDTO})
+	} else {
+		ctx.JSON(http.StatusCreated, gin.H{"Info": resutl})
+	}
+}

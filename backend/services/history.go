@@ -2,6 +2,7 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
 	"mime/multipart"
 )
@@ -9,6 +10,7 @@ import (
 type IHistoricalService interface {
 	Add(historyRow *dtos.HistoryCompleteDTO) *dtos.ValidationDTO
 	AddHistoricalTransactions(file *multipart.FileHeader, userId int) *dtos.ValidationDTO
+	GetAllHistorical(userId int) ([]*models.HistoricalModelWithOutJoins, *dtos.ValidationDTO)
 }
 
 type historicalService struct {
@@ -99,4 +101,16 @@ func (service *historicalService) AddHistoricalTransactions(file *multipart.File
 	}
 	service.historyRepository.Commit()
 	return nil
+}
+
+func (service *historicalService) GetAllHistorical(userId int) ([]*models.HistoricalModelWithOutJoins, *dtos.ValidationDTO) {
+	historicals, err := service.historyRepository.GetAll(userId)
+	if err != nil {
+		return nil, &dtos.ValidationDTO{
+			Code:    23,
+			Message: "An error ocurred when get all historical from user",
+		}
+	}
+
+	return historicals, nil
 }

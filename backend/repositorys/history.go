@@ -3,12 +3,14 @@ package repositorys
 import (
 	"database/sql"
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/querys"
 	"hubla/desafiofullstack/utils"
 )
 
 type IHistoricalRepository interface {
 	AddHistoryRow(history *dtos.HistoryCompleteDTO) (bool, error)
+	GetAll(userId int) ([]*models.HistoricalModelWithOutJoins, error)
 	Begin()
 	Commit()
 	Rollback()
@@ -36,6 +38,18 @@ func (repository *historicalRepository) AddHistoryRow(history *dtos.HistoryCompl
 	)
 
 	return result.RowsAffected == 1, result.Error
+}
+
+func (repository *historicalRepository) GetAll(userId int) ([]*models.HistoricalModelWithOutJoins, error) {
+
+	var historicals []*models.HistoricalModelWithOutJoins
+
+	result := repository.uow.GetDB().Raw(
+		querys.GetAllDataFromUser,
+		sql.Named(querys.NamedUserId, userId),
+	).Scan(&historicals)
+
+	return historicals, result.Error
 }
 
 func (repository *historicalRepository) Begin() {
