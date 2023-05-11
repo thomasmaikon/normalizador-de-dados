@@ -34,7 +34,7 @@ func (repository *loginRepository) Create(input *dtos.LoginDTO) (*entitys.Login,
 
 func (loginRepository *loginRepository) Validate(input *dtos.LoginDTO) (*entitys.Login, error) {
 	var login entitys.Login
-	err := loginRepository.db.Table("logins").Where("email = ? AND password = ?", input.Email, input.Password)
+	err := loginRepository.db.Table("logins").Where("email = ? AND password = ?", input.Email, input.Password).Scan(&login)
 
 	return &login, err.Error
 }
