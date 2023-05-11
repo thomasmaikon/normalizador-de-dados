@@ -1,8 +1,8 @@
 package querys
 
 const AddAfiliate = `
-INSERT INTO AFILIATEDS (NAME, LEFT_OVER ,CREATOR_ID)
-SELECT @` + NamedName + `, 0.0, CREATORS.ID FROM CREATORS
+INSERT INTO AFILIATEDS (NAME, CREATOR_ID)
+SELECT @` + NamedName + `, CREATORS.ID FROM CREATORS
 WHERE CREATORS.USER_ID = @` + NamedUserId + ``
 
 const GetAllAfiliates = `
