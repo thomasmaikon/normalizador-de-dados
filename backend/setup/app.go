@@ -37,6 +37,7 @@ func (app *appEngine) InitializeRoutes() *appEngine {
 	app.Router.POST("creator", utils.IsAuthorized, controllers.CreateNewCreator)
 	app.Router.GET("creator", utils.IsAuthorized, controllers.GetCreator)
 	app.Router.GET("creator/historical", utils.IsAuthorized, controllers.GetHistoricalTransactions)
+	app.Router.GET("creator/historical/afiliate/:id", utils.IsAuthorized, controllers.GetHistoricalTransactionsAtAfiliate)
 	app.Router.POST("creator/product", utils.IsAuthorized, controllers.CreatorAddProduct)
 	app.Router.POST("creator/afiliate", utils.IsAuthorized, controllers.CreatorAddAfiliate)
 	app.Router.POST("creator/upload", utils.IsAuthorized, controllers.NormalizeData)
