@@ -3,6 +3,7 @@ package services
 import (
 	"hubla/desafiofullstack/dtos"
 	"hubla/desafiofullstack/entitys"
+	"hubla/desafiofullstack/exceptions"
 	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
 	"log"
@@ -10,7 +11,7 @@ import (
 
 type IAfiliatedService interface {
 	AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, userId int) *dtos.ValidationDTO
-	FindAfiliate(name string, creatorId int) (*entitys.Afiliated, error)
+	FindAfiliate(name string, creatorId int) (*entitys.Afiliated, *dtos.ValidationDTO)
 	GetAllAfiliates(userId int) ([]*models.AfiliateModel, *dtos.ValidationDTO)
 }
 
@@ -43,8 +44,16 @@ func (service *afiliatedService) AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, u
 	return nil
 }
 
-func (service *afiliatedService) FindAfiliate(name string, creatorId int) (*entitys.Afiliated, error) {
-	return service.afiliatedRepository.Find(name, creatorId)
+func (service *afiliatedService) FindAfiliate(name string, creatorId int) (*entitys.Afiliated, *dtos.ValidationDTO) {
+	afiliate, err := service.afiliatedRepository.Find(name, creatorId)
+	if err != nil {
+		return nil, &dtos.ValidationDTO{
+			Code:    exceptions.ErrorCodeAfiliateNotFound,
+			Message: exceptions.ErrorMessageAfiliateNotFound,
+		}
+	}
+
+	return afiliate, nil
 }
 
 func (service *afiliatedService) GetAllAfiliates(userId int) ([]*models.AfiliateModel, *dtos.ValidationDTO) {

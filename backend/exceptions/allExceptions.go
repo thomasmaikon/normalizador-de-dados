@@ -9,4 +9,7 @@ const (
 
 	ErrorCodeConvertToAfiliateId  = 3
 	ErrorMessageConvertAfiliateId = "Falha ao receber afiliado"
+
+	ErrorCodeAfiliateNotFound    = 4
+	ErrorMessageAfiliateNotFound = "Afiliado nao encontrado"
 )
