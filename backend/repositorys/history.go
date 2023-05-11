@@ -11,6 +11,8 @@ import (
 type IHistoricalRepository interface {
 	AddHistoryRow(history *dtos.HistoryCompleteDTO) (bool, error)
 	GetAll(userId int) ([]*models.HistoricalModelWithOutJoins, error)
+	GetAmmountReceivedAtCreator(creatorId int) (uint64, error)
+	GetAmmountPaidAtCreator(creatorId int) (uint64, error)
 	Begin()
 	Commit()
 	Rollback()
@@ -50,6 +52,26 @@ func (repository *historicalRepository) GetAll(userId int) ([]*models.Historical
 	).Scan(&historicals)
 
 	return historicals, result.Error
+}
+
+func (repository *historicalRepository) GetAmmountReceivedAtCreator(creatorId int) (uint64, error) {
+	var received uint64
+	err := repository.uow.GetDB().Raw(
+		querys.GetAmmountReceivedValueAtCreator,
+		sql.Named(querys.NamedID, creatorId),
+	).Scan(&received)
+
+	return received, err.Error
+}
+
+func (repository *historicalRepository) GetAmmountPaidAtCreator(creatorId int) (uint64, error) {
+	var received uint64
+	err := repository.uow.GetDB().Raw(
+		querys.GetAmmountPaidValueAtCreator,
+		sql.Named(querys.NamedID, creatorId),
+	).Scan(&received)
+
+	return received, err.Error
 }
 
 func (repository *historicalRepository) Begin() {

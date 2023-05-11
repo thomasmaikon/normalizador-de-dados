@@ -39,7 +39,7 @@ func (service *creatorService) CreateNewCreator(newCreator *dtos.CreatorDTO, use
 
 func (service *creatorService) GetCreator(userId int) (*models.CreatorModel, *dtos.ValidationDTO) {
 	creator, err := service.creatorRepository.Find(userId)
-	if err != nil {
+	if err != nil || creator.ID == 0 {
 		return nil, &dtos.ValidationDTO{
 			Code:    20,
 			Message: "Creator doesn`t finded",

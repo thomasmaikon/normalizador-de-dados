@@ -22,3 +22,11 @@ INNER JOIN TRANSACTIONS
 LEFT JOIN AFILIATEDS 
 	ON AFILIATEDS.ID = HISTORIES.AFILIATED_ID
 WHERE CREATORS.USER_ID = @` + NamedUserId + ``
+
+const GetAmmountReceivedValueAtCreator = `
+SELECT COALESCE(SUM(VALUE),0) FROM HISTORIES h  
+WHERE H.creator_id  = @` + NamedID + ` AND H.transaction_id = 1 or H.transaction_id = 2`
+
+const GetAmmountPaidValueAtCreator = `
+SELECT COALESCE(SUM(VALUE),0) FROM HISTORIES h  
+WHERE H.creator_id  = @` + NamedID + ` AND H.transaction_id = 3`

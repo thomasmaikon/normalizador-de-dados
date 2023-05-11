@@ -11,6 +11,7 @@ type IHistoricalService interface {
 	Add(historyRow *dtos.HistoryCompleteDTO) *dtos.ValidationDTO
 	AddHistoricalTransactions(file *multipart.FileHeader, userId int) *dtos.ValidationDTO
 	GetAllHistorical(userId int) ([]*models.HistoricalModelWithOutJoins, *dtos.ValidationDTO)
+	GetAmmountAtCreator(creatorId int) (uint64, *dtos.ValidationDTO)
 }
 
 type historicalService struct {
@@ -113,4 +114,24 @@ func (service *historicalService) GetAllHistorical(userId int) ([]*models.Histor
 	}
 
 	return historicals, nil
+}
+
+func (service *historicalService) GetAmmountAtCreator(creatorId int) (uint64, *dtos.ValidationDTO) {
+	receive, err := service.historyRepository.GetAmmountReceivedAtCreator(creatorId)
+	if err != nil {
+		return 0, &dtos.ValidationDTO{
+			Code:    26,
+			Message: "Error when search amount",
+		}
+	}
+	
+	paid, err := service.historyRepository.GetAmmountPaidAtCreator(creatorId)
+	if err != nil {
+		return 0, &dtos.ValidationDTO{
+			Code:    27,
+			Message: "Error when search amount",
+		}
+	}
+
+	return (receive - paid), nil
 }

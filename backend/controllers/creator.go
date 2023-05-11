@@ -29,13 +29,22 @@ func GetCreator(ctx *gin.Context) {
 	id := ctx.GetString("userID")
 	userId, _ := strconv.Atoi(id)
 
-	service := services.NewCreatorSerivce()
-	result, validationDTO := service.GetCreator(userId)
+	serviceCreator := services.NewCreatorSerivce()
+	result, validationDTO := serviceCreator.GetCreator(userId)
 	if validationDTO != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"Info": validationDTO})
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{"Info": result})
-	}
+		ctx.Next()
+	} 
+
+	serviceHistorical := services.NewHistoricalService()
+	ammount, validationDTO := serviceHistorical.GetAmmountAtCreator(result.CreatorId)
+	if validationDTO != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"Info": validationDTO})
+		ctx.Next()
+	} 
+	
+	ctx.JSON(http.StatusOK, gin.H{"Info": result, "Amount": ammount})
+
 }
 
 func CreatorAddProduct(ctx *gin.Context) {
