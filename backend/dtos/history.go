@@ -1,6 +1,9 @@
 package dtos
 
-import "time"
+import (
+	"hubla/desafiofullstack/models"
+	"time"
+)
 
 type HistoryCompleteDTO struct {
 	IdCreator         int
@@ -9,4 +12,9 @@ type HistoryCompleteDTO struct {
 	IdProduct         int
 	IdAfiliated       int
 	IdTransactionType int
+}
+
+type HistoricalCompleteAfiliateDTO struct {
+	AfiliateHistoricals []*models.HistoricalModelWithOutJoins
+	Amount              uint64
 }
