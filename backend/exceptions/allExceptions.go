@@ -18,4 +18,10 @@ const (
 
 	ErrorCodeAllAfiliateNotFound    = 6
 	ErrorMessageAllAfiliateNotFound = "Falha ao buscar todos afiliados"
+
+	ErrorCodeFaildCreateCreator    = 7
+	ErrorMessageFaildCreateCreator = "Falha ao cadastrar um creator"
+
+	ErrorCodeFaildCreatorNotFound    = 8
+	ErrorMessageFaildCreatorNotFound = "Falha ao buscar creator"
 )

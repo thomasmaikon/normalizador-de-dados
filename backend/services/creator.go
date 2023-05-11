@@ -2,9 +2,9 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/exceptions"
 	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
-	"log"
 )
 
 type ICreatorService interface {
@@ -27,10 +27,9 @@ func (service *creatorService) CreateNewCreator(newCreator *dtos.CreatorDTO, use
 	err := service.creatorRepository.CreateCreator(newCreator, userID)
 
 	if err != nil {
-		log.Println(err.Error())
 		return &dtos.ValidationDTO{
-			Code:    6,
-			Message: "Does not possible create an creator",
+			Code:    exceptions.ErrorCodeFaildCreateCreator,
+			Message: exceptions.ErrorMessageFaildCreateCreator,
 		}
 	}
 
@@ -41,8 +40,8 @@ func (service *creatorService) GetCreator(userId int) (*models.CreatorModel, *dt
 	creator, err := service.creatorRepository.Find(userId)
 	if err != nil || creator.ID == 0 {
 		return nil, &dtos.ValidationDTO{
-			Code:    20,
-			Message: "Creator doesn`t finded",
+			Code:    exceptions.ErrorCodeFaildCreateCreator,
+			Message: exceptions.ErrorMessageFaildCreatorNotFound,
 		}
 	}
 
