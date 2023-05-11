@@ -13,6 +13,8 @@ type IHistoricalRepository interface {
 	GetAll(userId int) ([]*models.HistoricalModelWithOutJoins, error)
 	GetAmmountReceivedAtCreator(creatorId int) (uint64, error)
 	GetAmmountPaidAtCreator(creatorId int) (uint64, error)
+	GetHistoricalFromAfiliate(creatorId int, afiliateId int) ([]*models.HistoricalModelWithOutJoins, error)
+	GetAmountReceivedFromAfiliate(creatorId int, afiliateId int) (uint64, error)
 	Begin()
 	Commit()
 	Rollback()
@@ -69,6 +71,30 @@ func (repository *historicalRepository) GetAmmountPaidAtCreator(creatorId int) (
 	err := repository.uow.GetDB().Raw(
 		querys.GetAmmountPaidValueAtCreator,
 		sql.Named(querys.NamedID, creatorId),
+	).Scan(&received)
+
+	return received, err.Error
+}
+
+func (repository *historicalRepository) GetHistoricalFromAfiliate(creatorId int, afiliateId int) ([]*models.HistoricalModelWithOutJoins, error) {
+	var historicals []*models.HistoricalModelWithOutJoins
+
+	result := repository.uow.GetDB().Raw(
+		querys.GetAllDataFromAfiliate,
+		sql.Named(querys.NamedCreatorsId, creatorId),
+		sql.Named(querys.NamedAfiliatedId, afiliateId),
+	).Scan(&historicals)
+
+	return historicals, result.Error
+}
+
+func (repository *historicalRepository) GetAmountReceivedFromAfiliate(creatorId int, afiliateId int) (uint64, error) {
+	var received uint64
+
+	err := repository.uow.GetDB().Raw(
+		querys.GetAmountReceivedFromAfiliate,
+		sql.Named(querys.NamedCreatorsId, creatorId),
+		sql.Named(querys.NamedAfiliatedId, afiliateId),
 	).Scan(&received)
 
 	return received, err.Error

@@ -31,3 +31,23 @@ WHERE H.creator_id  = @` + NamedID + ` AND H.transaction_id = 1 or H.transaction
 const GetAmmountPaidValueAtCreator = `
 SELECT COALESCE(SUM(VALUE),0) FROM HISTORIES h  
 WHERE H.creator_id  = @` + NamedID + ` AND H.transaction_id = 3`
+
+const GetAllDataFromAfiliate = `
+SELECT 
+	AFILIATEDS.Name as afiliate,
+	PRODUCTS.Description as product, 
+	TRANSACTIONS.Description as transaction,
+	HISTORIES.Value as Value,
+	HISTORIES.Date as Date
+FROM HISTORIES
+INNER JOIN PRODUCTS 
+	ON PRODUCTS.ID = HISTORIES.PRODUCT_ID
+INNER JOIN TRANSACTIONS 
+	ON TRANSACTIONS.ID = HISTORIES.TRANSACTION_ID
+LEFT JOIN AFILIATEDS 
+	ON AFILIATEDS.ID = HISTORIES.AFILIATED_ID
+WHERE HISTORIES.CREATOR_ID = @` + NamedCreatorsId + ` AND AFILIATEDS.ID = @` + NamedAfiliatedId + ``
+
+const GetAmountReceivedFromAfiliate = `
+SELECT COALESCE(SUM(VALUE),0) FROM HISTORIES 
+WHERE HISTORIES.CREATOR_ID  = @` + NamedCreatorsId + ` AND HISTORIES.AFILIATED_ID = @` + NamedAfiliatedId + ` AND HISTORIES.TRANSACTION_ID = 4`
