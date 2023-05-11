@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/exceptions"
 	"hubla/desafiofullstack/services"
 	"net/http"
 	"strconv"
@@ -11,7 +12,14 @@ import (
 
 func CreateNewCreator(ctx *gin.Context) {
 	id := ctx.GetString("userID")
-	userId, _ := strconv.Atoi(id)
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"Info": &dtos.ValidationDTO{
+				Code:    exceptions.ErrorCodeConvertToUserId,
+				Message: exceptions.ErrorMessageConverToUserId,
+			}})
+	}
 
 	var newCreator dtos.CreatorDTO
 	ctx.BindJSON(&newCreator)
@@ -27,7 +35,14 @@ func CreateNewCreator(ctx *gin.Context) {
 
 func GetCreator(ctx *gin.Context) {
 	id := ctx.GetString("userID")
-	userId, _ := strconv.Atoi(id)
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"Info": &dtos.ValidationDTO{
+				Code:    exceptions.ErrorCodeConvertToUserId,
+				Message: exceptions.ErrorMessageConverToUserId,
+			}})
+	}
 
 	serviceCreator := services.NewCreatorSerivce()
 	result, validationDTO := serviceCreator.GetCreator(userId)
@@ -49,7 +64,14 @@ func GetCreator(ctx *gin.Context) {
 
 func CreatorAddProduct(ctx *gin.Context) {
 	id := ctx.GetString("userID")
-	userId, _ := strconv.Atoi(id)
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"Info": &dtos.ValidationDTO{
+				Code:    exceptions.ErrorCodeConvertToUserId,
+				Message: exceptions.ErrorMessageConverToUserId,
+			}})
+	}
 
 	var newProduct dtos.ProductDTO
 	ctx.ShouldBindJSON(&newProduct)
@@ -66,7 +88,14 @@ func CreatorAddProduct(ctx *gin.Context) {
 
 func CreatorAddAfiliate(ctx *gin.Context) {
 	id := ctx.GetString("userID")
-	userId, _ := strconv.Atoi(id)
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"Info": &dtos.ValidationDTO{
+				Code:    exceptions.ErrorCodeConvertToUserId,
+				Message: exceptions.ErrorMessageConverToUserId,
+			}})
+	}
 
 	var newProduct dtos.AfiliatedDTO
 	ctx.ShouldBindJSON(&newProduct)
@@ -83,7 +112,14 @@ func CreatorAddAfiliate(ctx *gin.Context) {
 
 func GetHistoricalTransactions(ctx *gin.Context) {
 	id := ctx.GetString("userID")
-	userId, _ := strconv.Atoi(id)
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"Info": &dtos.ValidationDTO{
+				Code:    exceptions.ErrorCodeConvertToUserId,
+				Message: exceptions.ErrorMessageConverToUserId,
+			}})
+	}
 
 	service := services.NewHistoricalService()
 	resutl, validationDTO := service.GetAllHistorical(userId)
@@ -97,10 +133,24 @@ func GetHistoricalTransactions(ctx *gin.Context) {
 
 func GetHistoricalTransactionsAtAfiliate(ctx *gin.Context) {
 	id := ctx.GetString("userID")
-	userId, _ := strconv.Atoi(id)
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"Info": &dtos.ValidationDTO{
+				Code:    exceptions.ErrorCodeConvertToUserId,
+				Message: exceptions.ErrorMessageConverToUserId,
+			}})
+	}
 
 	paramId := ctx.Param("id")
-	afiliateId, _ := strconv.Atoi(paramId)
+	afiliateId, err := strconv.Atoi(paramId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"Info": &dtos.ValidationDTO{
+				Code:    exceptions.ErrorCodeConvertToAfiliateId,
+				Message: exceptions.ErrorMessageConverToUserId,
+			}})
+	}
 
 	service := services.NewHistoricalService()
 	result, validationDTO := service.GetAfiliateHistorical(userId, afiliateId)
