@@ -82,6 +82,6 @@ func GetHistoricalTransactions(ctx *gin.Context) {
 	if validationDTO != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": validationDTO})
 	} else {
-		ctx.JSON(http.StatusCreated, gin.H{"Info": resutl})
+		ctx.JSON(http.StatusOK, gin.H{"Info": resutl})
 	}
 }
