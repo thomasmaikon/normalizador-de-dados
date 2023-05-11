@@ -55,8 +55,8 @@ func (service *afiliatedService) GetAllAfiliates(userId int) ([]*models.Afiliate
 	afiliates, err := service.afiliatedRepository.GetAll(userId)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
-			Code:    25,
-			Message: "Faild to find all afiliates",
+			Code:    exceptions.ErrorCodeAllAfiliateNotFound,
+			Message: exceptions.ErrorMessageAllAfiliateNotFound,
 		}
 	}
 

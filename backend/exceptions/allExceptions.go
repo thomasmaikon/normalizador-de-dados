@@ -15,4 +15,7 @@ const (
 
 	ErrorCodeAddAfiliate   = 5
 	ErrorMessageddAfiliate = "Falha ao adicionar afiliado"
+
+	ErrorCodeAllAfiliateNotFound    = 6
+	ErrorMessageAllAfiliateNotFound = "Falha ao buscar todos afiliados"
 )
