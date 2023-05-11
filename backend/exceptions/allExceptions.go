@@ -24,4 +24,10 @@ const (
 
 	ErrorCodeFaildCreatorNotFound    = 8
 	ErrorMessageFaildCreatorNotFound = "Falha ao buscar creator"
+
+	ErrorCodeFaildAddTransaction    = 9
+	ErrorMessageFaildAddTransaction = "Falha ao adicionar transacao"
+
+	ErrorCodeFaildNormalizeFile    = 10
+	ErrorMessageFaildNormalizeFile = "Falha ao fazer normalizacao dos dados do arquivo"
 )
