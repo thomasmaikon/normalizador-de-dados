@@ -33,16 +33,16 @@ func GetCreator(ctx *gin.Context) {
 	result, validationDTO := serviceCreator.GetCreator(userId)
 	if validationDTO != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"Info": validationDTO})
-		ctx.Next()
-	} 
+		return
+	}
 
 	serviceHistorical := services.NewHistoricalService()
 	ammount, validationDTO := serviceHistorical.GetAmmountAtCreator(result.CreatorId)
 	if validationDTO != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"Info": validationDTO})
-		ctx.Next()
-	} 
-	
+		return
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{"Info": result, "Amount": ammount})
 
 }
