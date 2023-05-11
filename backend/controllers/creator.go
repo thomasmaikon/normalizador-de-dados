@@ -94,3 +94,21 @@ func GetHistoricalTransactions(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"Info": resutl})
 	}
 }
+
+func GetHistoricalTransactionsAtAfiliate(ctx *gin.Context) {
+	id := ctx.GetString("userID")
+	userId, _ := strconv.Atoi(id)
+
+	paramId := ctx.Param("id")
+	afiliateId, _ := strconv.Atoi(paramId)
+
+	service := services.NewHistoricalService()
+	result, validationDTO := service.GetAfiliateHistorical(userId, afiliateId)
+
+	if validationDTO != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"Info": validationDTO})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{"Info": result})
+	}
+
+}
