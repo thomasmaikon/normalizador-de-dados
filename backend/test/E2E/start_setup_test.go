@@ -189,10 +189,9 @@ func TestCreateAnCreatorAndGetIt(t *testing.T) {
 	creatorExpected := models.CreatorModel{
 		CreatorId: 2,
 		Name:      creator.Name,
-		LeftOver:  0,
 	}
-	outputExpectedJsonCreator := fmt.Sprintf(`{"Info":{"CreatorId":%d,"Name":"%s","LeftOver":%d}}`,
-		creatorExpected.CreatorId, creatorExpected.Name, creatorExpected.LeftOver)
+	outputExpectedJsonCreator := fmt.Sprintf(`{"Amount":0, "Info":{"CreatorId":%d,"Name":"%s"}}`,
+		creatorExpected.CreatorId, creatorExpected.Name,)
 
 	result := apitest.New().
 		Handler(app).
