@@ -11,9 +11,9 @@ type HistoryModel struct {
 }
 
 type HistoricalModelWithOutJoins struct {
-	AfiliateName           string
-	ProductDescription     string
-	TransactionDescription string
+	AfiliateName           string `gorm:"column:afiliate"`
+	ProductDescription     string `gorm:"column:product"`
+	TransactionDescription string `gorm:"column:transaction"`
 	Value                  uint64
 	Date                   time.Time
 }
