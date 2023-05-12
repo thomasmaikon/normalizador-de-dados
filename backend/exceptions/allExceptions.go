@@ -30,4 +30,13 @@ const (
 
 	ErrorCodeFaildNormalizeFile    = 10
 	ErrorMessageFaildNormalizeFile = "Falha ao fazer normalizacao dos dados do arquivo"
+
+	ErrorCodeFindProduct    = 11
+	ErrorMessageFindProduct = "Falha ao procurar produto"
+
+	ErrorCodeCreateProduct    = 12
+	ErrorMessageCreateProduct = "Falha ao criar produto"
+
+	ErrorCodeFaildNotFoundALlProducts    = 13
+	ErrorMessageFaildNotFoundALlProducts = "Falha ao buscar todos os produtos"
 )
