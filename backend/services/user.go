@@ -2,6 +2,7 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/exceptions"
 	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
 )
@@ -33,8 +34,8 @@ func (service *userService) CreateUser(input dtos.UserDTO) (*models.UserModel, *
 	newUser, err := service.userRepository.CreateUser(input, login.LoginId)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
-			Code:    17,
-			Message: "Doesn`t possible create user",
+			Code:    exceptions.ErrorCodeCouldNotCreateUser,
+			Message: exceptions.ErrorMessageCouldNotCreateUser,
 		}
 	}
 
@@ -52,8 +53,8 @@ func (service *userService) GetUser(inputLogin *dtos.LoginDTO) (*models.UserMode
 	user, err := service.userRepository.FindUser(loginModel.LoginId)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
-			Code:    19,
-			Message: "User not find",
+			Code:    exceptions.ErrorCodeNotFidUser,
+			Message: exceptions.ErrorMessageNotFidUser,
 		}
 	}
 	return &models.UserModel{UserId: user.ID}, nil

@@ -2,6 +2,7 @@ package services
 
 import (
 	"hubla/desafiofullstack/dtos"
+	"hubla/desafiofullstack/exceptions"
 	"hubla/desafiofullstack/models"
 	"hubla/desafiofullstack/repositorys"
 )
@@ -25,8 +26,8 @@ func (service *loginService) CreateLogin(inputLogin dtos.LoginDTO) (*models.Logi
 	login, err := service.loginRepository.Create(&inputLogin)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
-			Code:    2,
-			Message: "Faild to create login",
+			Code:    exceptions.ErrorCodeFaildCreateLogin,
+			Message: exceptions.ErrorMessageFaildCreateLogin,
 		}
 	}
 
@@ -37,8 +38,8 @@ func (service *loginService) ValidateCredential(inputLogin *dtos.LoginDTO) (*mod
 	login, err := service.loginRepository.Validate(inputLogin)
 	if err != nil || login.ID == 0{
 		return nil, &dtos.ValidationDTO{
-			Code:    3,
-			Message: "User not found",
+			Code:   exceptions.ErrorCodeFaildLogin ,
+			Message: exceptions.ErrorMessageFaildLogin,
 		}
 	}
 

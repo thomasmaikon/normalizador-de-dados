@@ -97,8 +97,8 @@ func (service *historicalService) GetAllHistorical(userId int) ([]*models.Histor
 	historicals, err := service.historyRepository.GetAll(userId)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
-			Code:    23,
-			Message: "An error ocurred when get all historical from user",
+			Code:    exceptions.ErrorCodeHistorical,
+			Message: exceptions.ErrorMessageHistorical,
 		}
 	}
 
@@ -109,16 +109,16 @@ func (service *historicalService) GetAmmountAtCreator(creatorId int) (uint64, *d
 	receive, err := service.historyRepository.GetAmmountReceivedAtCreator(creatorId)
 	if err != nil {
 		return 0, &dtos.ValidationDTO{
-			Code:    26,
-			Message: "Error when search amount",
+			Code:    exceptions.ErrorCodeAmountFromCreator,
+			Message: exceptions.ErrorMessageAmountFromCreator,
 		}
 	}
 
 	paid, err := service.historyRepository.GetAmmountPaidAtCreator(creatorId)
 	if err != nil {
 		return 0, &dtos.ValidationDTO{
-			Code:    27,
-			Message: "Error when search amount",
+			Code:    exceptions.ErrorCodeAmountFromCreator,
+			Message: exceptions.ErrorMessageAmountFromCreator,
 		}
 	}
 
@@ -134,16 +134,16 @@ func (service *historicalService) GetAfiliateHistorical(userId int, afiliateId i
 	afiliateHistorical, err := service.historyRepository.GetHistoricalFromAfiliate(creator.CreatorId, afiliateId)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
-			Code:    28,
-			Message: "Error when search historical at afiliate",
+			Code:    exceptions.ErrorCodeNotFoundHistoricalFromAfiliate,
+			Message: exceptions.ErrorMessageNotFoundHistoricalFromAfiliate,
 		}
 	}
 
 	amountReceived, err := service.historyRepository.GetAmountReceivedFromAfiliate(creator.CreatorId, afiliateId)
 	if err != nil {
 		return nil, &dtos.ValidationDTO{
-			Code:    29,
-			Message: "Error when get amount at afiliate",
+			Code:    exceptions.ErrorCodeAmountFromAfiliate,
+			Message: exceptions.ErrorMessageAmountFromAfiliate,
 		}
 	}
 

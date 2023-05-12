@@ -39,4 +39,28 @@ const (
 
 	ErrorCodeFaildNotFoundALlProducts    = 13
 	ErrorMessageFaildNotFoundALlProducts = "Falha ao buscar todos os produtos"
+
+	ErrorCodeFaildCreateLogin    = 14
+	ErrorMessageFaildCreateLogin = "Email ja cadastrado"
+
+	ErrorCodeFaildLogin    = 15
+	ErrorMessageFaildLogin = "Credenciais invalidas"
+
+	ErrorCodeHistorical    = 16
+	ErrorMessageHistorical = "Nao foi possivel encontrar historico de transacoes"
+
+	ErrorCodeAmountFromCreator    = 17
+	ErrorMessageAmountFromCreator = "Falha ao calcular valor total do creator"
+
+	ErrorCodeAmountFromAfiliate    = 18
+	ErrorMessageAmountFromAfiliate = "Falha ao calcular valor total do afiliado"
+
+	ErrorCodeNotFoundHistoricalFromAfiliate    = 19
+	ErrorMessageNotFoundHistoricalFromAfiliate = "Falha ao buscar historico do afiliado"
+
+	ErrorCodeCouldNotCreateUser    = 20
+	ErrorMessageCouldNotCreateUser = "Nao foi possivel cadastrar o usuario"
+
+	ErrorCodeNotFidUser    = 21
+	ErrorMessageNotFidUser = "Nao foi possivel encontrar o usuario"
 )
