@@ -32,7 +32,6 @@ func (repository *productRepository) CreateNewProduct(newProduct *dtos.ProductDT
 		sql.Named(querys.NamedDescription, newProduct.Description),
 		sql.Named(querys.NamedUserId, userId),
 		sql.Named(querys.NamedCreatorsId, creatorId),
-		sql.Named(querys.NamedPrice, newProduct.Price),
 	)
 
 	return err.RowsAffected > 0, err.Error
