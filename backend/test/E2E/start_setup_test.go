@@ -84,7 +84,7 @@ func TestSimpleRequestForCreateUserthatAlredyExist(t *testing.T) {
 		JSON(inputData).
 		Expect(t).
 		HeaderNotPresent("Authorization").
-		Status(http.StatusConflict).
+		Status(http.StatusBadRequest).
 		End()
 }
 

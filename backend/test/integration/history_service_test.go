@@ -388,22 +388,22 @@ func TestGetAllHistoricalFromAfiliate(t *testing.T) {
 	}
 
 	historicalAfiliateExpected := &dtos.HistoricalCompleteAfiliateDTO{
-		AfiliateHistoricals: []*models.HistoricalModelWithOutJoins{
-			&models.HistoricalModelWithOutJoins{
+		AfiliateHistoricals: &[]models.HistoricalModelWithOutJoins{
+			models.HistoricalModelWithOutJoins{
 				AfiliateName:           "People10",
 				AfiliateId:             0,
 				ProductDescription:     "Simple 7",
 				TransactionDescription: "Venda produtor",
 				Value:                  0000012750,
 			},
-			&models.HistoricalModelWithOutJoins{
+			models.HistoricalModelWithOutJoins{
 				AfiliateName:           "People10",
 				AfiliateId:             0,
 				ProductDescription:     "Simple 8",
 				TransactionDescription: "Comissao recebida",
 				Value:                  0000050000,
 			},
-			&models.HistoricalModelWithOutJoins{
+			models.HistoricalModelWithOutJoins{
 				AfiliateName:           "People10",
 				AfiliateId:             0,
 				ProductDescription:     "Simple 9",
@@ -423,7 +423,7 @@ func TestGetAllHistoricalFromAfiliate(t *testing.T) {
 
 	historicalsOutput, _ := historicalService.GetAfiliateHistorical(userOutput.UserId, afiliatesOutput[0].Id)
 
-	if len(historicalsOutput.AfiliateHistoricals) != len(historicalAfiliateExpected.AfiliateHistoricals) ||
+	if len(*historicalsOutput.AfiliateHistoricals) != len(*historicalAfiliateExpected.AfiliateHistoricals) ||
 		historicalsOutput.Amount != historicalAfiliateExpected.Amount {
 		t.Fatal("Unexpected error, objects were supposed to be the same")
 	}

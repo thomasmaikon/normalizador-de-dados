@@ -56,7 +56,7 @@ func (repository *productRepository) GetAll(creatorId int) ([]*models.ProductMod
 
 	result := repository.uow.GetDB().
 		Table("products").
-		Select("id, description, price").
+		Select("id, description").
 		Where("creator_id = ?", creatorId).
 		Scan(&product)
 
