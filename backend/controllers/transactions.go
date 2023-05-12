@@ -11,7 +11,6 @@ import (
 func NormalizeData(ctx *gin.Context) {
 	file, err := ctx.FormFile("file")
 	if err != nil {
-		// Lida com o erro
 		ctx.String(http.StatusBadRequest, "Faild to getting file")
 		return
 	}

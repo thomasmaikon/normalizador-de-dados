@@ -13,7 +13,7 @@ type IHistoricalRepository interface {
 	GetAll(userId int) ([]*models.HistoricalModelWithOutJoins, error)
 	GetAmmountReceivedAtCreator(creatorId int) (uint64, error)
 	GetAmmountPaidAtCreator(creatorId int) (uint64, error)
-	GetHistoricalFromAfiliate(creatorId int, afiliateId int) ([]*models.HistoricalModelWithOutJoins, error)
+	GetHistoricalFromAfiliate(creatorId int, afiliateId int) (*[]models.HistoricalModelWithOutJoins, error)
 	GetAmountReceivedFromAfiliate(creatorId int, afiliateId int) (uint64, error)
 	Begin()
 	Commit()
@@ -76,8 +76,8 @@ func (repository *historicalRepository) GetAmmountPaidAtCreator(creatorId int) (
 	return received, err.Error
 }
 
-func (repository *historicalRepository) GetHistoricalFromAfiliate(creatorId int, afiliateId int) ([]*models.HistoricalModelWithOutJoins, error) {
-	var historicals []*models.HistoricalModelWithOutJoins
+func (repository *historicalRepository) GetHistoricalFromAfiliate(creatorId int, afiliateId int) (*[]models.HistoricalModelWithOutJoins, error) {
+	var historicals *[]models.HistoricalModelWithOutJoins
 
 	result := repository.uow.GetDB().Raw(
 		querys.GetAllDataFromAfiliate,

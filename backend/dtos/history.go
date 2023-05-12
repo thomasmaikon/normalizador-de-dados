@@ -15,6 +15,6 @@ type HistoryCompleteDTO struct {
 }
 
 type HistoricalCompleteAfiliateDTO struct {
-	AfiliateHistoricals []*models.HistoricalModelWithOutJoins
+	AfiliateHistoricals *[]models.HistoricalModelWithOutJoins
 	Amount              uint64
 }

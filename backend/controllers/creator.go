@@ -140,6 +140,7 @@ func GetHistoricalTransactionsAtAfiliate(ctx *gin.Context) {
 				Code:    exceptions.ErrorCodeConvertToUserId,
 				Message: exceptions.ErrorMessageConverToUserId,
 			}})
+		return
 	}
 
 	paramId := ctx.Param("id")
@@ -150,6 +151,7 @@ func GetHistoricalTransactionsAtAfiliate(ctx *gin.Context) {
 				Code:    exceptions.ErrorCodeConvertToAfiliateId,
 				Message: exceptions.ErrorMessageConverToUserId,
 			}})
+		return
 	}
 
 	service := services.NewHistoricalService()

@@ -132,7 +132,7 @@ func (service *historicalService) GetAfiliateHistorical(userId int, afiliateId i
 	}
 
 	afiliateHistorical, err := service.historyRepository.GetHistoricalFromAfiliate(creator.CreatorId, afiliateId)
-	if err != nil {
+	if err != nil || afiliateHistorical == nil {
 		return nil, &dtos.ValidationDTO{
 			Code:    exceptions.ErrorCodeNotFoundHistoricalFromAfiliate,
 			Message: exceptions.ErrorMessageNotFoundHistoricalFromAfiliate,
