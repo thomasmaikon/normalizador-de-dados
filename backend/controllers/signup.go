@@ -18,7 +18,7 @@ func CreateUser(ctx *gin.Context) {
 	user, result := service.CreateUser(inputUser)
 
 	if result != nil {
-		ctx.JSON(http.StatusConflict, gin.H{"error": result})
+		ctx.JSON(http.StatusBadRequest, gin.H{"Info": result})
 	} else {
 		token, err := utils.NewAuth().GenerateTokenJWT(user)
 		if err != nil {
