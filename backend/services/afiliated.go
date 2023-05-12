@@ -41,7 +41,7 @@ func (service *afiliatedService) AddAfiliate(inputAfiliate *dtos.AfiliatedDTO, u
 
 func (service *afiliatedService) FindAfiliate(name string, creatorId int) (*entitys.Afiliated, *dtos.ValidationDTO) {
 	afiliate, err := service.afiliatedRepository.Find(name, creatorId)
-	if err != nil {
+	if err != nil || afiliate.ID == 0 {
 		return nil, &dtos.ValidationDTO{
 			Code:    exceptions.ErrorCodeAfiliateNotFound,
 			Message: exceptions.ErrorMessageAfiliateNotFound,

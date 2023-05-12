@@ -64,13 +64,13 @@ func (service *historicalService) AddHistoricalTransactions(file *multipart.File
 	for _, historcal := range normalizedData {
 
 		afiliate, validationDTO := service.afiliatedService.FindAfiliate(historcal.Afiliate, creator.CreatorId)
-		if validationDTO != nil || afiliate.ID == 0 {
+		if validationDTO != nil {
 			service.historyRepository.Rollback()
 			return validationDTO
 		}
 
 		product, validationDTO := service.productService.FindProduct(historcal.ProductDescription, creator.CreatorId)
-		if validationDTO != nil || product.ID == 0 {
+		if validationDTO != nil {
 			service.historyRepository.Rollback()
 			return validationDTO
 		}

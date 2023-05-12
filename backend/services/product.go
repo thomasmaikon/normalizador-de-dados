@@ -48,7 +48,7 @@ func (service *productService) CreateProduct(newProduct *dtos.ProductDTO, userId
 
 func (service *productService) FindProduct(description string, creatorId int) (*entitys.Product, *dtos.ValidationDTO) {
 	product, err := service.productRepository.Find(description, creatorId)
-	if err != nil {
+	if err != nil || product.ID == 0 {
 		return nil, &dtos.ValidationDTO{
 			Code:    exceptions.ErrorCodeFindProduct,
 			Message: exceptions.ErrorMessageFindProduct,
