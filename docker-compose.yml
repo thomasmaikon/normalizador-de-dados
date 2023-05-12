@@ -9,7 +9,22 @@ services:
       - 5432:5432
     volumes:
       - data:/data/db
-     
+  
+  api:
+    container_name: api_go
+    build: ./backend
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+  
+  front:
+    container_name: front_end
+    build: ./frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
 
 
 volumes:
